@@ -33,20 +33,20 @@ RUN curl -L https://github.com/01org/tbb/archive/${TBB_VERSION}.tar.gz > tbb.tar
 
 # Install CMake
 RUN curl -L https://github.com/Kitware/CMake/archive/v${CMAKE_VERSION}.tar.gz > v${CMAKE_VERSION} \
-  tar xzf v${CMAKE_VERSION} > /dev/null 2>&1 \
-  cd CMake-${CMAKE_VERSION}/ \
-  ./configure > /dev/null \
-  gmake -j2 > /dev/null \
-  gmake install > /dev/null \
-  cd ..
+  && tar xzf v${CMAKE_VERSION} > /dev/null 2>&1 \
+  && cd CMake-${CMAKE_VERSION}/ \
+  && ./configure > /dev/null \
+  && gmake -j2 > /dev/null \
+  && gmake install > /dev/null \
+  && cd ..
 
 # Install Eigen
 RUN curl -L https://bitbucket.org/eigen/eigen/get/${EIGEN3_VERSION}.tar.gz > ${EIGEN3_VERSION} \
-tar xzf ${EIGEN3_VERSION} > /dev/null 2>&1 \
-cd eigen* \
-mkdir build \
-cd build \
-cmake ../ > /dev/null \
-make install > /dev/null \
-cd .. \
-cd ..
+  && tar xzf ${EIGEN3_VERSION} > /dev/null 2>&1 \
+  && cd eigen* \
+  && mkdir build \
+  && cd build \
+  && cmake ../ > /dev/null \
+  && make install > /dev/null \
+  && cd .. \
+  && cd ..
