@@ -10,7 +10,7 @@ ARG TBB_VERSION="2019_U5"
 RUN curl -L https://github.com/01org/tbb/archive/${TBB_VERSION}.tar.gz > tbb.tar.gz \
   && tar xvf tbb.tar.gz > /dev/null 2>&1 \
   && cd tbb-${TBB_VERSION} \
-  && make > /dev/null 2>&1 \
+  && make -j2 > /dev/null 2>&1 \
   && cd build \
   && mv *_release release \
   && mv *_debug debug \
@@ -113,7 +113,7 @@ RUN ls \
 RUN export CXXFLAGS=-lrt \
   && export LD_FLAGS=-lrt \
   && ADD_CFLAGS=-lrt; ./configure > /dev/null \
-  && make > /dev/null \ 
+  && make -j2 > /dev/null \ 
   && make install > /dev/null \
   && cp -r include /usr/local \
   && cp -r lib /usr/local
