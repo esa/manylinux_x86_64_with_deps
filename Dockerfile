@@ -123,3 +123,21 @@ RUN export CXXFLAGS=-lrt \
   && cp -r include /usr/local \
   && cp -r lib /usr/local
 
+WORKDIR /root/install
+# Install gmp (before mpfr as its used by it)
+ARG GMP_VERSION="6.1.2"
+RUN curl -L https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.bz2 > gmp-${GMP_VERSION}.tar.bz2 \
+  && tar xvf gmp-${GMP_VERSION}.tar.bz2  > /dev/null 2>&1 \
+  && cd gmp-${GMP_VERSION} > /dev/null 2>&1 \
+  && ./configure --enable-fat > /dev/null 2>&1 \
+  && make -j2  > /dev/null 2>&1 \
+  && make install > /dev/null 2>&1
+
+# Install mpfr
+ARG MPFR_VERSION="3.1.6"
+RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz > mpfr-${MPFR_VERSION}.tar.gz \
+  && tar xvf mpfr-${MPFR_VERSION}.tar.gz > /dev/null 2>&1 \
+  && cd mpfr-${MPFR_VERSION} \
+  && ./configure > /dev/null 2>&1 \
+  && make -j2 > /dev/null 2>&1 \
+  && make install > /dev/null 2>&1
