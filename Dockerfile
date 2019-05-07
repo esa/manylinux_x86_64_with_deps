@@ -20,18 +20,16 @@ RUN curl -L https://github.com/01org/tbb/archive/${TBB_VERSION}.tar.gz > tbb.tar
   && cp libtbb* /usr/lib64/ \
   && ldconfig \
   && cd ../../include/ \
-  && cp -r tbb /usr/local/include/ \
-  && cd ../../
+  && cp -r tbb /usr/local/include/ 
 
 # Install CMake
 ARG CMAKE_VERSION="3.14.3"
-RUN curl -L https://github.com/Kitware/CMake/archive/v${CMAKE_VERSION}.tar.gz > v${CMAKE_VERSION} \
-  && tar xzf v${CMAKE_VERSION} > /dev/null 2>&1 \
+RUN curl -L https://github.com/Kitware/CMake/archive/v${CMAKE_VERSION}.tar.gz > cmake.tar.gz \
+  && tar xzf cmake.tar.gz > /dev/null 2>&1 \
   && cd CMake-${CMAKE_VERSION}/ \
   && ./configure > /dev/null \
   && gmake -j2 > /dev/null \
-  && gmake install > /dev/null \
-  && cd ..
+  && gmake install > /dev/null 
 
 # Install Eigen
 ARG EIGEN3_VERSION="3.3.7"
@@ -41,9 +39,7 @@ RUN curl -L https://bitbucket.org/eigen/eigen/get/${EIGEN3_VERSION}.tar.gz > ${E
   && mkdir build \
   && cd build \
   && cmake ../ > /dev/null \
-  && make install > /dev/null \
-  && cd .. \
-  && cd ..
+  && make install > /dev/null 
 
 # Install Boost
 ARG BOOST_VERSION="1.70.0"
@@ -82,14 +78,16 @@ RUN cd boost_`echo ${BOOST_VERSION}|tr "." "_"` \
   && ln -s /usr/local/lib/libboost_python27mu.so.${BOOST_VERSION} /usr/local/lib/libboost_python27mu.so
 
 # Install NLopt
-ARG NLOPT_VERSION="2.5.0"
+ARG NLOPT_VERSION="2.6.1"
 # NOTE: use alternative mirror as the one from the original webpage is faulty.
-RUN curl -L  http://pkgs.fedoraproject.org/repo/pkgs/NLopt/NLopt-${NLOPT_VERSION}.tar.gz/d0b8f139a4acf29b76dbae69ade8ac54/NLopt-${NLOPT_VERSION}.tar.gz > NLopt-${NLOPT_VERSION}.tar.gz \
+RUN curl -L  https://github.com/stevengj/nlopt/archive/v${NLOPT_VERSION}.tar.gz > NLopt-${NLOPT_VERSION}.tar.gz \
   && tar xzf NLopt-${NLOPT_VERSION}.tar.gz \
   && cd nlopt-${NLOPT_VERSION} \
-  && ./configure --enable-shared --disable-static > /dev/null \
-  && make -j2 install > /dev/null \
-  && cd ..
+  && mkdir build \
+  && cd build \
+  && cmake ../ > /dev/null \
+  && make -j2 > /dev/null \
+  && make install > /dev/null
 
 # Download Ipopt 
 ARG IPOPT_VERSION="3.12.13"
