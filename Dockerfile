@@ -94,3 +94,32 @@ RUN curl -L  http://pkgs.fedoraproject.org/repo/pkgs/NLopt/NLopt-${NLOPT_VERSION
   && make -j2 install > /dev/null \
   && cd ..
 
+# Download Ipopt 
+ARG IPOPT_VERSION="3.12.13"
+RUN curl -L  http://www.coin-or.org/download/source/Ipopt/Ipopt-${IPOPT_VERSION}.tgz > ipopt.tgz \
+  && gunzip ipopt.tgz \
+  && tar -xvf ipopt.tar > /dev/null \
+  && mv Ipopt* ipopt
+
+# Install Third PartyDeps for Ipopt
+WORKDIR /root/install/ipopt
+RUN yum install -y wget > /dev/null \
+RUN ls \ 
+  && cd ThirdParty/Blas/ \
+  &&  ./get.Blas > /dev/null\
+  &&  cd ../Lapack \
+  && ./get.Lapack > /dev/null\
+  && cd ../ASL \
+  && ./get.ASL > /dev/null\
+  && cd ../Mumps \
+  && ./get.Mumps > /dev/null
+
+# Install Ipopt (ADD_CFLAGS and friends are there to avoid the compilation error: undefined reference to 'clock_gettime' and 'clock_settime')
+RUN export CXXFLAGS=-lrt \
+  && export LD_FLAGS=-lrt \
+  && ADD_CFLAGS=-lrt; ./configure > /dev/null \
+  && make > /dev/null \ 
+  && make install > /dev/null \
+  && cp -r include /usr/local \
+  && cp -r lib /usr/local
+
