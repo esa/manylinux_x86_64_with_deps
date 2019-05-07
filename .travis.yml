@@ -1,0 +1,19 @@
+sudo: required
+services:
+- docker
+env:
+  global:
+  - REGISTRY_USER=pagmo2
+  matrix:
+    secure: dsMs2Cgsw9c6Uv5TjM7CmD8UDNkK0kalWE4XlpA5y7OtEAfBm/rStsyBBmJ0Hem1XO3xzjDyfKqP0nP8Ja2ij7cEmBJfkWPHNBREB2guPObRtPKshmN9Gp9zOrvRR9bkoMnJdyoe9vW3y0gtWgmYs419vGxX/HbCqnE2Bw+MpoulQaz2rNT2pVsW1aDI0TBUFfOu3TIO3QNJGifSvkn3Wfs/BRJMD9yjjT9NlUxJMOEJl1CSUq+QQ+gPWyfY42qAU0KAIE0y0qXuaAVUpiWBziMPN45IUH5vokiwl5SrbZzkhzTMbmLXBOYUmG6dWOg5CYq3tGFWIewv01kf+UuJJx1L6KFgQuYlkS/pOt6CRHWzQaVTOGFuVxHzeIOg9zIGg/f0qtbJcI5IdZ+FlZPb4OxAo6w+OS8Jp+VkJmchdfxbkpHIA3BzSq13l+m8CB68BNaQ59BCVlQxHnQY25yWQnO/bap7GCI5+6YqjKeNkcS9vR4DJjSVgM0p3kiJn+L6XZv62VnI1+0IdmgKPSFHX4AG/psWZ7SRPuSlazn8id+f/48CnvhSGHee38DaudIJtaj0eGyxJsBZoCD5+qtyGvltYW1MZyQo7B6NF4j+pLOCUbQQ3QBdCovIgYRorqDQwlVBiPDZ00AUIt7dVFNgyZslyDeno73LEq3yetQkJas=
+script:
+- docker build ./ -t pagmo2/manylinux2010_x86_64_with_deps:latest
+after_script:
+- docker images
+before_deploy:
+- docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+deploy:
+  provider: script
+  script: docker push pagmo2/manylinux2010_x86_64_with_deps
+  on:
+    branch: master

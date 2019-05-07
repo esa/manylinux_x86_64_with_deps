@@ -1,8 +1,5 @@
 FROM quay.io/pypa/manylinux2010_x86_64
 
-# If there was a file .patches in the github root, it would be copied, may be useful in the future
-#COPY ./patches ./patches 
-
 # We place ourself in some safe location to do all installations
 RUN cd \
   && mkdir install
@@ -27,7 +24,7 @@ RUN curl -L https://github.com/01org/tbb/archive/${TBB_VERSION}.tar.gz > tbb.tar
   && cd ../../
 
 # Install CMake
-ARG CMAKE_VERSION="3.12.0"
+ARG CMAKE_VERSION="3.14.3"
 RUN curl -L https://github.com/Kitware/CMake/archive/v${CMAKE_VERSION}.tar.gz > v${CMAKE_VERSION} \
   && tar xzf v${CMAKE_VERSION} > /dev/null 2>&1 \
   && cd CMake-${CMAKE_VERSION}/ \
@@ -37,7 +34,7 @@ RUN curl -L https://github.com/Kitware/CMake/archive/v${CMAKE_VERSION}.tar.gz > 
   && cd ..
 
 # Install Eigen
-ARG EIGEN3_VERSION="3.3.4"
+ARG EIGEN3_VERSION="3.3.7"
 RUN curl -L https://bitbucket.org/eigen/eigen/get/${EIGEN3_VERSION}.tar.gz > ${EIGEN3_VERSION} \
   && tar xzf ${EIGEN3_VERSION} > /dev/null 2>&1 \
   && cd eigen* \
@@ -49,7 +46,7 @@ RUN curl -L https://bitbucket.org/eigen/eigen/get/${EIGEN3_VERSION}.tar.gz > ${E
   && cd ..
 
 # Install Boost
-ARG BOOST_VERSION="1.67.0"
+ARG BOOST_VERSION="1.70.0"
 # Boost libraries download
 RUN curl -L http://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
   && tar xjf boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
@@ -85,7 +82,7 @@ RUN cd boost_`echo ${BOOST_VERSION}|tr "." "_"` \
   && ln -s /usr/local/lib/libboost_python27mu.so.${BOOST_VERSION} /usr/local/lib/libboost_python27mu.so
 
 # Install NLopt
-ARG NLOPT_VERSION="2.4.2"
+ARG NLOPT_VERSION="2.5.0"
 # NOTE: use alternative mirror as the one from the original webpage is faulty.
 RUN curl -L  http://pkgs.fedoraproject.org/repo/pkgs/NLopt/NLopt-${NLOPT_VERSION}.tar.gz/d0b8f139a4acf29b76dbae69ade8ac54/NLopt-${NLOPT_VERSION}.tar.gz > NLopt-${NLOPT_VERSION}.tar.gz \
   && tar xzf NLopt-${NLOPT_VERSION}.tar.gz \
@@ -134,7 +131,7 @@ RUN curl -L https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.bz2 > gmp-${G
   && make install > /dev/null 2>&1
 
 # Install mpfr
-ARG MPFR_VERSION="3.1.6"
+ARG MPFR_VERSION="4.0.2"
 RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz > mpfr-${MPFR_VERSION}.tar.gz \
   && tar xvf mpfr-${MPFR_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd mpfr-${MPFR_VERSION} \
