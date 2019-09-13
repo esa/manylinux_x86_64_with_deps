@@ -51,7 +51,7 @@ RUN curl -L http://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost
 # Make the non python boost libraries and install headers
 RUN cd boost_`echo ${BOOST_VERSION}|tr "." "_"` \
   && sh bootstrap.sh  > /dev/null \
-  && ./bjam --toolset=gcc link=shared threading=multi cxxflags="-std=c++11" variant=release --with-date_time --with-test --with-system --with-iostreams --with-timer --with-regex --with-chrono --with-serialization -j2 install > /dev/null
+  && ./bjam --toolset=gcc link=shared threading=multi cxxflags="-std=c++11" variant=release --with-date_time --with-test --with-system --with-filesystem --with-iostreams --with-timer --with-regex --with-chrono --with-serialization -j2 install > /dev/null
 
 # We copy the jam file into the boost directory. We could change WORKDIR, but its not straight forward to use ${BOOST_VERSION} and convert it in the correct directory name.
 COPY ./project-config.jam ./project-config.jam
