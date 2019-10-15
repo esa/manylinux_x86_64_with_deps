@@ -136,3 +136,14 @@ RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz
   && ./configure > /dev/null 2>&1 \
   && make -j2 > /dev/null 2>&1 \
   && make install > /dev/null 2>&1
+
+# Install symengine (requires gmp)
+ARG SYMENGINE_VERSION="0.5.0"
+RUN curl -L   https://github.com/symengine/symengine/releases/download/v${SYMENGINE_VERSION}/symengine-${SYMENGINE_VERSION}.tar.gz > symengine-${SYMENGINE_VERSION}.tar.gz \
+  && tar xvf symengine-${SYMENGINE_VERSION}.tar.gz > /dev/null 2>&1 \
+  && cd symengine-${SYMENGINE_VERSION} \
+  && mkdir build \
+  && cd build \
+  && cmake ../ > /dev/null \
+  && make > /dev/null \
+  && make install > /dev/null 
