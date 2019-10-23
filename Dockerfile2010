@@ -5,6 +5,42 @@ RUN cd \
   && mkdir install
 WORKDIR /root/install
 
+# Install gmp (before mpfr as its used by it)
+ARG GMP_VERSION="6.1.2"
+RUN curl -L https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.bz2 > gmp-${GMP_VERSION}.tar.bz2 \
+  && tar xvf gmp-${GMP_VERSION}.tar.bz2  > /dev/null 2>&1 \
+  && cd gmp-${GMP_VERSION} > /dev/null 2>&1 \
+  && ./configure --enable-fat > /dev/null 2>&1 \
+  && make -j2  > /dev/null 2>&1 \
+  && make install > /dev/null 2>&1
+
+# Install mpfr
+ARG MPFR_VERSION="4.0.2"
+RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz > mpfr-${MPFR_VERSION}.tar.gz \
+  && tar xvf mpfr-${MPFR_VERSION}.tar.gz > /dev/null 2>&1 \
+  && cd mpfr-${MPFR_VERSION} \
+  && ./configure > /dev/null 2>&1 \
+  && make -j2 > /dev/null 2>&1 \
+  && make install > /dev/null 2>&1
+
+# Install CMake
+ARG CMAKE_VERSION="3.14.3"
+RUN curl -L https://github.com/Kitware/CMake/archive/v${CMAKE_VERSION}.tar.gz > cmake.tar.gz \
+  && tar xzf cmake.tar.gz > /dev/null 2>&1 \
+  && cd CMake-${CMAKE_VERSION}/ \
+  && ./configure > /dev/null \
+  && gmake -j2 > /dev/null \
+  && gmake install > /dev/null
+
+# Install mp++
+ARG MPPP_VERSION="0.17"
+RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz > mppp.tar.gz \
+  && tar xzf mppp.tar.gz > /dev/null 2>&1 \
+  && cd mppp-${MPPP_VERSION} \
+  && cmake -DCMAKE_BUILD_TYPE=Release -DMPPP_WITH_MPFR=yes -DMPPP_WITH_QUADMATH=yes -DCMAKE_CXX_STANDARD=17 \
+  && make -j2 \
+  && make install
+
 # Installing TBB
 ARG TBB_VERSION="2019_U5"
 RUN curl -L https://github.com/01org/tbb/archive/${TBB_VERSION}.tar.gz > tbb.tar.gz \
@@ -21,15 +57,6 @@ RUN curl -L https://github.com/01org/tbb/archive/${TBB_VERSION}.tar.gz > tbb.tar
   && ldconfig \
   && cd ../../include/ \
   && cp -r tbb /usr/local/include/ 
-
-# Install CMake
-ARG CMAKE_VERSION="3.14.3"
-RUN curl -L https://github.com/Kitware/CMake/archive/v${CMAKE_VERSION}.tar.gz > cmake.tar.gz \
-  && tar xzf cmake.tar.gz > /dev/null 2>&1 \
-  && cd CMake-${CMAKE_VERSION}/ \
-  && ./configure > /dev/null \
-  && gmake -j2 > /dev/null \
-  && gmake install > /dev/null 
 
 # Install Eigen
 ARG EIGEN3_VERSION="3.3.7"
@@ -119,24 +146,6 @@ RUN export CXXFLAGS=-lrt \
   && cp -r lib /usr/local
 
 WORKDIR /root/install
-# Install gmp (before mpfr as its used by it)
-ARG GMP_VERSION="6.1.2"
-RUN curl -L https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.bz2 > gmp-${GMP_VERSION}.tar.bz2 \
-  && tar xvf gmp-${GMP_VERSION}.tar.bz2  > /dev/null 2>&1 \
-  && cd gmp-${GMP_VERSION} > /dev/null 2>&1 \
-  && ./configure --enable-fat > /dev/null 2>&1 \
-  && make -j2  > /dev/null 2>&1 \
-  && make install > /dev/null 2>&1
-
-# Install mpfr
-ARG MPFR_VERSION="4.0.2"
-RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz > mpfr-${MPFR_VERSION}.tar.gz \
-  && tar xvf mpfr-${MPFR_VERSION}.tar.gz > /dev/null 2>&1 \
-  && cd mpfr-${MPFR_VERSION} \
-  && ./configure > /dev/null 2>&1 \
-  && make -j2 > /dev/null 2>&1 \
-  && make install > /dev/null 2>&1
-
 # Install symengine (requires gmp)
 ARG SYMENGINE_VERSION="0.5.0"
 RUN curl -L   https://github.com/symengine/symengine/releases/download/v${SYMENGINE_VERSION}/symengine-${SYMENGINE_VERSION}.tar.gz > symengine-${SYMENGINE_VERSION}.tar.gz \
