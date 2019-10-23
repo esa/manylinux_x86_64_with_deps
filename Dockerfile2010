@@ -120,7 +120,7 @@ RUN curl -L https://github.com/bluescarni/obake/archive/v${OBAKE_VERSION}.tar.gz
   && cd obake-${OBAKE_VERSION} \
   && mkdir build \
   && cd build \
-  && cmake -DCMAKE_BUILD_TYPE=Release ../ \
+  && cmake -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release ../ \
   && make -j2 \
   && make install
 
