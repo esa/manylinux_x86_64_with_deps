@@ -26,14 +26,16 @@ RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz
 # Install CMake
 ARG CMAKE_VERSION="3.15.4"
 RUN curl -L https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz > cmake.tar.gz \
-  && tar xzf cmake.tar.gz --strip-components=1 -C /usr
+  && tar xzf cmake.tar.gz --strip-components=1 -C /usr/local
 
 # Install mp++
 ARG MPPP_VERSION="0.17"
 RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz > mppp.tar.gz \
   && tar xzf mppp.tar.gz > /dev/null 2>&1 \
   && cd mppp-${MPPP_VERSION} \
-  && cmake -DCMAKE_BUILD_TYPE=Release -DMPPP_WITH_MPFR=yes -DMPPP_WITH_QUADMATH=yes -DCMAKE_CXX_STANDARD=17 \
+  && mkdir build \
+  && cd build \
+  && cmake -DCMAKE_BUILD_TYPE=Release -DMPPP_WITH_MPFR=yes -DMPPP_WITH_QUADMATH=yes -DCMAKE_CXX_STANDARD=17 ../ \
   && make -j2 \
   && make install
 
