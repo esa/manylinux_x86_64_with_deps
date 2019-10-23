@@ -35,7 +35,18 @@ RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz >
   && cd mppp-${MPPP_VERSION} \
   && mkdir build \
   && cd build \
-  && cmake -DCMAKE_BUILD_TYPE=Release -DMPPP_WITH_MPFR=yes -DMPPP_WITH_QUADMATH=yes -DCMAKE_CXX_STANDARD=17 ../ \
+  && cmake -DCMAKE_BUILD_TYPE=Release -DMPPP_WITH_MPFR=yes -DCMAKE_CXX_STANDARD=17 ../ \
+  && make -j2 \
+  && make install
+
+# Install abseil
+ARG ABSEIL_VERSION="20190808"
+RUN curl -L https://github.com/abseil/abseil-cpp/archive/${ABSEIL_VERSION}.tar.gz > abseil.tar.gz \
+  && tar xzf abseil.tar.gz > /dev/null 2>&1 \
+  && cd abseil-cpp-${ABSEIL_VERSION} \
+  && mkdir build \
+  && cd build \
+  && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 ../ \
   && make -j2 \
   && make install
 
