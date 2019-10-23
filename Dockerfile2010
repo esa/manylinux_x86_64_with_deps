@@ -46,7 +46,7 @@ RUN curl -L https://github.com/abseil/abseil-cpp/archive/${ABSEIL_VERSION}.tar.g
   && cd abseil-cpp-${ABSEIL_VERSION} \
   && mkdir build \
   && cd build \
-  && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 ../ \
+  && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=-fPIC ../ \
   && make -j2 \
   && make install
 
@@ -112,6 +112,17 @@ RUN cd boost_`echo ${BOOST_VERSION}|tr "." "_"` \
   && rm /usr/local/lib/libboost_python26.so \ 
   && mv /usr/local/lib/libboost_python26.so.${BOOST_VERSION} /usr/local/lib/libboost_python27mu.so.${BOOST_VERSION} \
   && ln -s /usr/local/lib/libboost_python27mu.so.${BOOST_VERSION} /usr/local/lib/libboost_python27mu.so
+
+# Install obake
+ARG OBAKE_VERSION="0.1"
+RUN curl -L https://github.com/bluescarni/obake/archive/v${OBAKE_VERSION}.tar.gz > obake.tar.gz \
+  && tar xzf obake.tar.gz > /dev/null 2>&1 \
+  && cd obake-${OBAKE_VERSION} \
+  && mkdir build \
+  && cd build \
+  && cmake -DCMAKE_BUILD_TYPE=Release ../ \
+  && make -j2 \
+  && make install
 
 # Install NLopt
 ARG NLOPT_VERSION="2.6.1"
