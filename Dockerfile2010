@@ -173,6 +173,6 @@ RUN curl -L   https://github.com/symengine/symengine/releases/download/v${SYMENG
   && cd symengine-${SYMENGINE_VERSION} \
   && mkdir build \
   && cd build \
-  && cmake ../ > /dev/null \
-  && make > /dev/null \
-  && make install > /dev/null 
+  && cmake ../ \
+  && make \
+  && make install
