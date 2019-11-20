@@ -19,17 +19,17 @@ import python ;
 if ! [ python.configured ]
 {
  using python 
+  : 3.8 # version 
+  : /opt/python/cp38-cp38/bin/python # executable
+  : /opt/python/cp38-cp38/include/python3.8 # includes 
+  : /opt/python/cp38-cp38/libs # libs 
+  ;
+ using python 
   : 3.7 # version 
   : /opt/python/cp37-cp37m/bin/python # executable
   : /opt/python/cp37-cp37m/include/python3.7m # includes 
   : /opt/python/cp37-cp37m/libs # libs 
   ;
- using python 
-  : 3.6 # version 
-  : /opt/python/cp36-cp36m/bin/python # executable
-  : /opt/python/cp36-cp36m/include/python3.6m # includes 
-  : /opt/python/cp36-cp36m/libs # libs 
-  ;  
  using python 
   : 2.7 # version 
   : /opt/python/cp27-cp27m/bin/python # executable
