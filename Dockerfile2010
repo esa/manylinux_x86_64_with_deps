@@ -94,6 +94,10 @@ COPY ./project-config.jam ./project-config.jam
 RUN cd boost_`echo ${BOOST_VERSION}|tr "." "_"` \
   && cp ../project-config.jam ./
 
+# We make the library for python 38m
+RUN cd boost_`echo ${BOOST_VERSION}|tr "." "_"` \
+  && ./bjam --toolset=gcc link=shared threading=multi cxxflags="-std=c++11" variant=release --with-python python=3.8 -j2 install > /dev/null
+
 # We make the library for python 37m
 RUN cd boost_`echo ${BOOST_VERSION}|tr "." "_"` \
   && ./bjam --toolset=gcc link=shared threading=multi cxxflags="-std=c++11" variant=release --with-python python=3.7 -j2 install > /dev/null
