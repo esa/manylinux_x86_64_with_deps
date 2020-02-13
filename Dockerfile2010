@@ -118,7 +118,7 @@ RUN cd boost_`echo ${BOOST_VERSION}|tr "." "_"` \
   && ln -s /usr/local/lib/libboost_python27mu.so.${BOOST_VERSION} /usr/local/lib/libboost_python27mu.so
 
 # Install obake
-ARG OBAKE_VERSION="0.1"
+ARG OBAKE_VERSION="0.4.0"
 RUN curl -L https://github.com/bluescarni/obake/archive/v${OBAKE_VERSION}.tar.gz > obake.tar.gz \
   && tar xzf obake.tar.gz > /dev/null 2>&1 \
   && cd obake-${OBAKE_VERSION} \
