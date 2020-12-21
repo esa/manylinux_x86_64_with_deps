@@ -5,10 +5,6 @@ env:
 
 matrix:
   include:
-  - env: DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps" DOCKER_FILE="Dockerfile1"
-    sudo: required
-    services:
-    - docker
   - env: DOCKER_IMAGE="pagmo2/manylinux2010_x86_64_with_deps" DOCKER_FILE="Dockerfile2010"
     sudo: required
     services:
