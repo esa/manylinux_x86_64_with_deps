@@ -70,8 +70,11 @@ RUN curl -L https://github.com/oneapi-src/oneTBB/archive/${TBB_VERSION}.tar.gz >
   && cp -r tbb /usr/local/include/ 
 
 # Install Eigen
+
+https://gitlab.com/libeigen/eigen/-/archive/3.3.9/eigen-3.3.9.tar.gz
+
 ARG EIGEN3_VERSION="3.3.7"
-RUN curl -L https://bitbucket.org/eigen/eigen/get/${EIGEN3_VERSION}.tar.gz > ${EIGEN3_VERSION} \
+RUN curl -L https://gitlab.com/libeigen/eigen/-/archive/${EIGEN3_VERSION}/eigen-${EIGEN3_VERSION}.tar.gz > ${EIGEN3_VERSION} \
   && tar xzf ${EIGEN3_VERSION} > /dev/null 2>&1 \
   && cd eigen* \
   && mkdir build \
