@@ -52,7 +52,7 @@ RUN curl -L https://github.com/abseil/abseil-cpp/archive/${ABSEIL_VERSION}.tar.g
 
 # Installing TBB
 ARG TBB_VERSION="2019_U5"
-RUN curl -L https://github.com/01org/tbb/archive/${TBB_VERSION}.tar.gz > tbb.tar.gz \
+RUN curl -L https://github.com/oneapi-src/oneTBB/archive/${TBB_VERSION}.tar.gz > tbb.tar.gz \
   && tar xvf tbb.tar.gz > /dev/null 2>&1 \
   && cd tbb-${TBB_VERSION} \
   && make -j2 > /dev/null 2>&1 \
