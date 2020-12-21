@@ -32,8 +32,8 @@ RUN curl -L https://github.com/Kitware/CMake/archive/v${CMAKE_VERSION}.tar.gz > 
   && gmake install > /dev/null 
 
 # Install Eigen
-ARG EIGEN3_VERSION="3.3.7"
-RUN curl -L https://bitbucket.org/eigen/eigen/get/${EIGEN3_VERSION}.tar.gz > ${EIGEN3_VERSION} \
+ARG EIGEN3_VERSION="3.3.9"
+RUN curl -L https://gitlab.com/libeigen/eigen/-/archive/${EIGEN3_VERSION}/eigen-${EIGEN3_VERSION}.tar.gz > ${EIGEN3_VERSION} \
   && tar xzf ${EIGEN3_VERSION} > /dev/null 2>&1 \
   && cd eigen* \
   && mkdir build \
