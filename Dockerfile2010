@@ -27,7 +27,11 @@ RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz
 
 ARG CMAKE_VERSION="3.18.5"
 RUN curl -L https://github.com/Kitware/CMake/releases/download/v3.18.5/cmake-${CMAKE_VERSION}.tar.gz > cmake.tar.gz \
-  && tar xzf cmake.tar.gz --strip-components=1 -C /usr/local
+  && tar xzf cmake.tar.gz > /dev/null 2>&1 \
+  && cd CMake-${CMAKE_VERSION}/ \
+  && ./configure > /dev/null \
+  && gmake -j2 > /dev/null \
+  && gmake install > /dev/null 
 
 # Install mp++
 ARG MPPP_VERSION="0.17"
