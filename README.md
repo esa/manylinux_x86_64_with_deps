@@ -7,7 +7,7 @@ This repo contains essentially a Docker file able to build a new image starting 
  * NLopt
  * Ipopt
  * gmp
- * mpfr
+ * mpfr 
  
  # Use
  To build the image just type (after having cloned this repo and in its root)
