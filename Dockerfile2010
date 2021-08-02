@@ -53,8 +53,8 @@ RUN curl -L https://github.com/abseil/abseil-cpp/archive/${ABSEIL_VERSION}.tar.g
   && make install
 
 # Installing TBB
-ARG TBB_VERSION="v2021.3.0"
-RUN curl -L https://github.com/oneapi-src/oneTBB/archive/refs/tags/${TBB_VERSION}.tar.gz > tbb.tar.gz \
+ARG TBB_VERSION="2021.3.0"
+RUN curl -L https://github.com/oneapi-src/oneTBB/archive/refs/tags/v${TBB_VERSION}.tar.gz > tbb.tar.gz \
   && tar xvf tbb.tar.gz > /dev/null 2>&1 \
   && cd oneTBB-${TBB_VERSION} \
   && make -j2 > /dev/null 2>&1 \
