@@ -60,7 +60,8 @@ RUN curl -L https://github.com/oneapi-src/oneTBB/archive/refs/tags/v${TBB_VERSIO
   && mkdir build \
   && cd build \
   && cmake -DCMAKE_CXX_FLAGS=-DTBB_ALLOCATOR_TRAITS_BROKEN ../ > /dev/null \
-  && make install > /dev/null 
+  && make -j2 > /dev/null \
+  && make install 
 
 # Install Eigen
 ARG EIGEN3_VERSION="3.3.9"
