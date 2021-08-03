@@ -57,17 +57,10 @@ ARG TBB_VERSION="2021.3.0"
 RUN curl -L https://github.com/oneapi-src/oneTBB/archive/refs/tags/v${TBB_VERSION}.tar.gz > tbb.tar.gz \
   && tar xvf tbb.tar.gz > /dev/null 2>&1 \
   && cd oneTBB-${TBB_VERSION} \
-  && make -j2 > /dev/null 2>&1 \
+  && mkdir build \
   && cd build \
-  && mv *_release release \
-  && mv *_debug debug \
-  && cd release \
-  && cp libtbb* /usr/lib64/ \
-  && cd ../debug \
-  && cp libtbb* /usr/lib64/ \
-  && ldconfig \
-  && cd ../../include/ \
-  && cp -r tbb /usr/local/include/ 
+  && cmake ../ > /dev/null \
+  && make install > /dev/null 
 
 # Install Eigen
 ARG EIGEN3_VERSION="3.3.9"
