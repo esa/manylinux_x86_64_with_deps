@@ -1,4 +1,4 @@
-# manylinux2010 docker image with added dependencies
+# manylinux_2_28_ docker image with added dependencies
 This repo contains essentially a Docker file able to build a new image starting from the manylinux_2_28_x86_64 and adding
  * tbb
  * Eigen3
