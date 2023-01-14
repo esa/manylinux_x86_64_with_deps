@@ -1,5 +1,7 @@
-# manylinux_2_28_ docker image with added dependencies
-This repo contains essentially a Docker file able to build a new image starting from the manylinux_2_28_x86_64 and adding
+# manylinux image with added dependencies for pagmo2+ 
+This repo contains the Docker file used to build the manylinux image used to distribute in PyPi pagmo2 development team software.
+
+ * llvm
  * tbb
  * Eigen3
  * CMake
@@ -19,8 +21,10 @@ This repo contains essentially a Docker file able to build a new image starting 
  * fmt
  * spdlog
  * symengine
+
+ check the dockerfile for the exact versions used.
  
- # Use
+ # Manual upload to dockerhub
  To build the image just type (after having cloned this repo and in its root)
  ```
  docker build ./ -f ./Dockerfile228 -t pagmo2/manylinux228_x86_64_with_deps:latest
