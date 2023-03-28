@@ -1,4 +1,6 @@
-FROM quay.io/pypa/manylinux_2_28_x86_64
+ARG IMAGE=quay.io/pypa/manylinux_2_28_x86_64
+
+FROM $IMAGE
 
 # We place ourself in some safe location to do all installations
 RUN cd \
