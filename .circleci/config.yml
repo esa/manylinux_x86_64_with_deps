@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  docker: circleci/docker@2.2.0
+
 jobs:
   manylinux228_aarch64_with_deps-build:
     machine:
@@ -7,10 +10,13 @@ jobs:
     resource_class: arm.medium
     steps:
     - checkout
-    - run:
-        name: Build and push aarch64
-        command: |
-          docker build -f Dockerfile228 . --build-arg IMAGE=quay.io/pypa/manylinux_2_28_aarch64
+    - docker/publish
+      image: $DOCKERHUB_USERNAME/manylinux228_aarch64_with_deps
+      dockerfile: Dockerfile228
+      extra_build_args: --build-arg IMAGE=quay.io/pypa/manylinux_2_28_aarch64
+      docker-username: $DOCKERHUB_USERNAME
+      docker-password: $DOCKERHUB_TOKEN
+      tags: latest
 
 workflows:
   version: 2.1
