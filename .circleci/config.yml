@@ -11,11 +11,11 @@ jobs:
     steps:
     - checkout
     - docker/publish
-      image: $DOCKERHUB_USERNAME/manylinux228_aarch64_with_deps
+      docker-username: ${ DOCKERHUB_USERNAME }
+      docker-password: ${ DOCKERHUB_TOKEN }
+      image: ${ DOCKERHUB_USERNAME }/manylinux228_aarch64_with_deps
       dockerfile: Dockerfile228
       extra_build_args: --build-arg IMAGE=quay.io/pypa/manylinux_2_28_aarch64
-      docker-username: $DOCKERHUB_USERNAME
-      docker-password: $DOCKERHUB_TOKEN
       tags: latest
 
 workflows:
