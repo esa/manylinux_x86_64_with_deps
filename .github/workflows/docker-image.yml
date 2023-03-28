@@ -36,6 +36,8 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/manylinux228_x86_64_with_deps:latest
 
   manylinux228_aarch64_with_deps-build:
+    runs-on: ubuntu-latest
+    steps:
       -
         name: Checkout
         uses: actions/checkout@v3
