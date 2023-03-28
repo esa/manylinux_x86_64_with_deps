@@ -11,7 +11,7 @@ jobs:
     steps:
     - checkout
     - docker/publish
-      docker-username: ${ DOCKERHUB_USERNAME }
+      docker-username: ${DOCKERHUB_USERNAME}
       docker-password: ${ DOCKERHUB_TOKEN }
       image: ${ DOCKERHUB_USERNAME }/manylinux228_aarch64_with_deps
       dockerfile: Dockerfile228
