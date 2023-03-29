@@ -7,6 +7,7 @@ jobs:
   manylinux228_aarch64_with_deps-build:
     machine:
       image: ubuntu-2004:202101-01
+    resource_class: arm.medium
     steps:
     - checkout
     - docker/check:
