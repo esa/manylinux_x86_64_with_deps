@@ -10,8 +10,8 @@ jobs:
     steps:
     - checkout
     - docker/check:
-        docker-username: $DOCKERHUB_USERNAME
-        docker-password: $DOCKERHUB_TOKEN
+        docker-username: DOCKERHUB_USERNAME
+        docker-password: DOCKERHUB_TOKEN
     - docker/build:
         dockerfile: Dockerfile228
         extra_build_args: --build-arg IMAGE=quay.io/pypa/manylinux_2_28_aarch64
