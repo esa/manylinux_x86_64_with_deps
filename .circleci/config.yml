@@ -4,17 +4,24 @@ orbs:
   docker: circleci/docker@2.2.0
 
 jobs:
-  docker/publish:
-    resource_class: arm.medium
-    docker-username: ${ DOCKERHUB_USERNAME }
-    docker-password: ${ DOCKERHUB_TOKEN }
-    image: ${ DOCKERHUB_USERNAME }/manylinux228_aarch64_with_deps
-    dockerfile: Dockerfile228
-    extra_build_args: --build-arg IMAGE=quay.io/pypa/manylinux_2_28_aarch64
-    tags: latest
+  manylinux228_aarch64_with_deps-build:
+    machine:
+      image: ubuntu-2004:202101-01
+    steps:
+    - checkout
+    - docker/build:
+        dockerfile: Dockerfile228
+        extra_build_args: --build-arg IMAGE=quay.io/pypa/manylinux_2_28_aarch64
+        image: ${ DOCKERHUB_USERNAME }/manylinux228_aarch64_with_deps
+        tags: latest
+    - docker/push:
+        docker-username: ${ DOCKERHUB_USERNAME }
+        docker-password: ${ DOCKERHUB_TOKEN }
+        image: ${ DOCKERHUB_USERNAME }/manylinux228_aarch64_with_deps
+        tags: latest
 
 workflows:
   version: 2.1
   all_builds:
     jobs:
-    - docker/publish:
+    - manylinux228_aarch64_with_deps-build
