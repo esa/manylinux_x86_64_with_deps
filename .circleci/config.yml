@@ -15,7 +15,7 @@ jobs:
         docker-password: DOCKERHUB_TOKEN
     - docker/build:
         dockerfile: Dockerfile228
-        extra_build_args: --build-arg IMAGE=quay.io/pypa/manylinux_2_28_aarch64
+        extra_build_args: --build-arg ARCH=aarch64
         image: $DOCKERHUB_USERNAME/manylinux228_aarch64_with_deps
         tag: latest
     - docker/push:
