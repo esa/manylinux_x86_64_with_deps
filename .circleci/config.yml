@@ -1,0 +1,29 @@
+version: 2.1
+
+orbs:
+  docker: circleci/docker@2.2.0
+
+jobs:
+  manylinux228_aarch64_with_deps-build:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.large
+    steps:
+    - checkout
+    - docker/check:
+        docker-username: DOCKERHUB_USERNAME
+        docker-password: DOCKERHUB_TOKEN
+    - docker/build:
+        dockerfile: Dockerfile228
+        extra_build_args: --build-arg ARCH=aarch64
+        image: $DOCKERHUB_USERNAME/manylinux228_aarch64_with_deps
+        tag: latest
+    - docker/push:
+        image: $DOCKERHUB_USERNAME/manylinux228_aarch64_with_deps
+        tag: latest
+
+workflows:
+  version: 2.1
+  all_builds:
+    jobs:
+    - manylinux228_aarch64_with_deps-build

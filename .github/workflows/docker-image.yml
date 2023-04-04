@@ -6,7 +6,7 @@ on:
       - "master"
 
 jobs:
-  build:
+  manylinux228_x86_64_with_deps-build:
     runs-on: ubuntu-latest
     steps:
       -
@@ -22,10 +22,15 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       -
-        name: Build and push
+        name: Build and push amd64
         uses: docker/build-push-action@v3
         with:
           context: .
           file: ./Dockerfile228
+          platforms: linux/amd64
           push: true
+          # This section is not necessary as this is the default in the Dockerfile,
+          # Added to be explicit
+          build-args: |
+            ARCH=x86_64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/manylinux228_x86_64_with_deps:latest

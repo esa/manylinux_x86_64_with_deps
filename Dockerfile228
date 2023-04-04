@@ -1,4 +1,5 @@
-FROM quay.io/pypa/manylinux_2_28_x86_64
+ARG ARCH=x86_64
+FROM quay.io/pypa/manylinux_2_28_$ARCH
 
 # We place ourself in some safe location to do all installations
 RUN cd \
@@ -38,7 +39,7 @@ RUN cd boost_`echo ${BOOST_VERSION}|tr "." "_"` \
   && sh bootstrap.sh \
   # > /dev/null \
   && ./b2 --toolset=gcc link=shared threading=multi cxxflags="-std=c++11" variant=release \
-  --with-date_time --with-test --with-system --with-filesystem --with-iostreams --with-timer --with-regex --with-chrono --with-serialization -j2 install 
+  --with-date_time --with-test --with-system --with-filesystem --with-iostreams --with-timer --with-regex --with-chrono --with-serialization -j4 install 
   # > /dev/null
 
 # Install Lapack and blas (4 IPOPT)
@@ -49,7 +50,7 @@ RUN yum install -y lapack-devel
 # Install ASL (4 IPOPT)
 WORKDIR /root/install
 RUN git clone https://github.com/coin-or-tools/ThirdParty-ASL.git
-RUN cd ThirdParty-ASL && ./get.ASL && ./configure && make -j2 && make install
+RUN cd ThirdParty-ASL && ./get.ASL && ./configure && make -j4 && make install
 
 # Install MUMPS (4 IPOPT)
 WORKDIR /root/install
@@ -64,7 +65,7 @@ RUN curl -L  https://github.com/coin-or/Ipopt/archive/releases/${IPOPT_VERSION}.
   && mv Ipopt* ipopt
 
 # Install Ipopt (ADD_CFLAGS and friends are there to avoid the compilation error: undefined reference to 'clock_gettime' and 'clock_settime')
-RUN cd ipopt && ./configure && make -j2 && make install
+RUN cd ipopt && ./configure && make -j4 && make install
 
 # Install gmp (before mpfr as its used by it)
 WORKDIR /root/install
@@ -73,7 +74,7 @@ RUN curl -L https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.bz2 > gmp-${G
   && tar xvf gmp-${GMP_VERSION}.tar.bz2  > /dev/null 2>&1 \
   && cd gmp-${GMP_VERSION} > /dev/null 2>&1 \
   && ./configure --enable-cxx --enable-fat > /dev/null 2>&1 \
-  && make -j2 \
+  && make -j4 \
     #> /dev/null 2>&1 \
   && make install > /dev/null 2>&1
 
@@ -84,7 +85,7 @@ RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz
   && tar xvf mpfr-${MPFR_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd mpfr-${MPFR_VERSION} \
   && ./configure > /dev/null 2>&1 \
-  && make -j2 \
+  && make -j4 \
   #> /dev/null 2>&1 \
   && make install > /dev/null 2>&1
 
@@ -97,7 +98,7 @@ RUN curl -L https://github.com/abseil/abseil-cpp/archive/${ABSEIL_VERSION}.tar.g
   && mkdir build \
   && cd build \
   && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=-fPIC ../ \
-  && make -j2 \
+  && make -j4 \
   #> /dev/null 2>&1 \
   && make install
 
@@ -110,7 +111,7 @@ RUN curl -L https://github.com/oneapi-src/oneTBB/archive/refs/tags/v${TBB_VERSIO
   && mkdir build \
   && cd build \
   && cmake -DTBB_TEST=OFF ../ > /dev/null \
-  && make -j2 \
+  && make -j4 \
   #> /dev/null \
   && make install 
 
@@ -135,7 +136,7 @@ RUN curl -L https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.tar.gz > fmt.ta
   && mkdir build \
   && cd build \
   && cmake -DBUILD_SHARED_LIBS=TRUE -DFMT_TEST=OFF -DFMT_DOC=OFF -DFMT_INSTALL=ON ../ \
-  && make -j2 \
+  && make -j4 \
   # > /dev/null \
   && make install
 
@@ -147,17 +148,21 @@ RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz >
   && cd mppp-${MPPP_VERSION} \
   && mkdir build \
   && cd build \
+  && if [ "$ARCH" = "x86_64" ]; \
+    then export CMAKE_PARAMS="-DMPPP_WITH_QUADMATH=yes"; \
+    else export CMAKE_PARAMS=""; \
+    fi \
   && cmake -DCMAKE_BUILD_TYPE=Release \
            -DMPPP_WITH_FMT=yes \
            -DMPPP_WITH_MPFR=yes \
            -DCMAKE_CXX_STANDARD=17 \
-           -DMPPP_WITH_MPFR=yes \
-           -DMPPP_WITH_QUADMATH=yes \
            -DMPPP_WITH_BOOST_S11N=ON \
            -DBoost_NO_BOOST_CMAKE=ON \
-           -DMPPP_WITH_FMT=ON ../ \
+           -DMPPP_WITH_FMT=ON \
+           $CMAKE_PARAMS \
+           ../ \
   #> /dev/null 2>&1 \
-  && make -j2 \
+  && make -j4 \
   #> /dev/null 2>&1 \
   && make install
 
@@ -170,7 +175,7 @@ RUN curl -L https://github.com/bluescarni/obake/archive/v${OBAKE_VERSION}.tar.gz
   && mkdir build \
   && cd build \
   && LDFLAGS="-lrt ${LDFLAGS}"; cmake -DBoost_NO_BOOST_CMAKE=ON -DOBAKE_WITH_LIBBACKTRACE=no -DCMAKE_BUILD_TYPE=Release ../ \
-  && make -j2 \
+  && make -j4 \
   # > /dev/null \
   && make install
 
@@ -184,7 +189,7 @@ RUN curl -L  https://github.com/stevengj/nlopt/archive/v${NLOPT_VERSION}.tar.gz 
   && mkdir build \
   && cd build \
   && cmake -DNLOPT_GUILE=OFF -DNLOPT_MATLAB=OFF -DNLOPT_OCTAVE=OFF ../ > /dev/null \
-  && make -j2 \
+  && make -j4 \
   # > /dev/null \
   && make install > /dev/null
 
@@ -197,7 +202,7 @@ RUN curl -L https://github.com/symengine/symengine/releases/download/v${SYMENGIN
   && mkdir build \
   && cd build \
   && cmake -DBUILD_TEST=no ../ \
-  && make -j2 \
+  && make -j4 \
     # > /dev/null \
   && make install
 
@@ -210,7 +215,7 @@ RUN curl -L https://github.com/gabime/spdlog/archive/refs/tags/v${SPDLOG_VERSION
   && mkdir build \
   && cd build \
   && cmake -DSPDLOG_FMT_EXTERNAL=ON -D SPDLOG_BUILD_SHARED=ON ../ \
-  && make -j2 \
+  && make -j4 \
     # > /dev/null \
   && make install
 
@@ -223,7 +228,7 @@ RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  >
   && mkdir build \
   && cd build \
   && LDFLAGS="-lrt ${LDFLAGS}"; cmake ../ \
-  && make -j2 \
+  && make -j4 \
     # > /dev/null \
   && make install
 
@@ -236,7 +241,7 @@ RUN curl -L https://github.com/pybind/pybind11/archive/v${PYBIND11_VERSION}.tar.
   && mkdir build \
   && cd build \
   && cmake ../ \
-  && make -j2 \
+  && make -j4 \
     # > /dev/null \
   && make install
 
