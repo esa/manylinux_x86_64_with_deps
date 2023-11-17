@@ -8,6 +8,17 @@ RUN cd \
 # We install all dependencies in a somehow decreasing order of compile length as to
 # allow for downstream modifications to be efficient.
 
+# Install gmp (before mpfr as its used by it)
+WORKDIR /root/install
+ARG GMP_VERSION="6.2.1"
+RUN curl -L https://raw.githubusercontent.com/esa/manylinux_x86_64_with_deps/master/gmp-${GMP_VERSION}.tar.bz2 > gmp-${GMP_VERSION}.tar.bz2 \
+  && tar xvf gmp-${GMP_VERSION}.tar.bz2  > /dev/null 2>&1 \
+  && cd gmp-${GMP_VERSION} > /dev/null 2>&1 \
+  && ./configure --enable-cxx --enable-fat > /dev/null 2>&1 \
+  && make -j4 \
+    #> /dev/null 2>&1 \
+  && make install > /dev/null 2>&1
+
 # Install llvm
 WORKDIR /root/install
 ARG LLVM_VERSION="15.0.7"
@@ -66,17 +77,6 @@ RUN curl -L  https://github.com/coin-or/Ipopt/archive/releases/${IPOPT_VERSION}.
 
 # Install Ipopt (ADD_CFLAGS and friends are there to avoid the compilation error: undefined reference to 'clock_gettime' and 'clock_settime')
 RUN cd ipopt && ./configure && make -j4 && make install
-
-# Install gmp (before mpfr as its used by it)
-WORKDIR /root/install
-ARG GMP_VERSION="6.2.1"
-RUN curl -L https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.bz2 > gmp-${GMP_VERSION}.tar.bz2 \
-  && tar xvf gmp-${GMP_VERSION}.tar.bz2  > /dev/null 2>&1 \
-  && cd gmp-${GMP_VERSION} > /dev/null 2>&1 \
-  && ./configure --enable-cxx --enable-fat > /dev/null 2>&1 \
-  && make -j4 \
-    #> /dev/null 2>&1 \
-  && make install > /dev/null 2>&1
 
 # Install mpfr
 WORKDIR /root/install
