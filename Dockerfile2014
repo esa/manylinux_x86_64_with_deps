@@ -201,7 +201,7 @@ RUN curl -L https://github.com/symengine/symengine/releases/download/v${SYMENGIN
   && cd symengine-${SYMENGINE_VERSION} \
   && mkdir build \
   && cd build \
-  && cmake -DBUILD_TEST=no ../ \
+  && cmake -DBUILD_TESTS=no -DBUILD_BENCHMARKS=no ../ \
   && make -j4 \
     # > /dev/null \
   && make install
@@ -227,7 +227,7 @@ RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  >
   && cd sleef-${SLEEF_VERSION} \
   && mkdir build \
   && cd build \
-  && LDFLAGS="-lrt ${LDFLAGS}"; cmake ../ \
+  && LDFLAGS="-lrt ${LDFLAGS}"; cmake ../ -DBUILD_TESTS=no \
   && make -j4 \
     # > /dev/null \
   && make install
