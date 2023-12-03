@@ -89,19 +89,6 @@ RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz
   #> /dev/null 2>&1 \
   && make install > /dev/null 2>&1
 
-# Install abseil
-WORKDIR /root/install
-ARG ABSEIL_VERSION="20220623.0"
-RUN curl -L https://github.com/abseil/abseil-cpp/archive/${ABSEIL_VERSION}.tar.gz > abseil.tar.gz \
-  && tar xzf abseil.tar.gz > /dev/null 2>&1 \
-  && cd abseil-cpp-${ABSEIL_VERSION} \
-  && mkdir build \
-  && cd build \
-  && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=-fPIC ../ \
-  && make -j4 \
-  #> /dev/null 2>&1 \
-  && make install
-
 # Installing TBB
 WORKDIR /root/install
 ARG TBB_VERSION="2021.11.0"
@@ -166,19 +153,6 @@ RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz >
   #> /dev/null 2>&1 \
   && make install
 
-# Install obake
-WORKDIR /root/install
-ARG OBAKE_VERSION="0.8.0"
-RUN curl -L https://github.com/bluescarni/obake/archive/v${OBAKE_VERSION}.tar.gz > obake.tar.gz \
-  && tar xzf obake.tar.gz > /dev/null 2>&1 \
-  && cd obake-${OBAKE_VERSION} \
-  && mkdir build \
-  && cd build \
-  && LDFLAGS="-lrt ${LDFLAGS}"; cmake -DBoost_NO_BOOST_CMAKE=ON -DOBAKE_WITH_LIBBACKTRACE=no -DCMAKE_BUILD_TYPE=Release ../ \
-  && make -j4 \
-  # > /dev/null \
-  && make install
-
 # Install NLopt
 WORKDIR /root/install
 ARG NLOPT_VERSION="2.7.1"
@@ -192,19 +166,6 @@ RUN curl -L  https://github.com/stevengj/nlopt/archive/v${NLOPT_VERSION}.tar.gz 
   && make -j4 \
   # > /dev/null \
   && make install > /dev/null
-
-# Install symengine (requires gmp)
-WORKDIR /root/install
-ARG SYMENGINE_VERSION="0.9.0"
-RUN curl -L https://github.com/symengine/symengine/releases/download/v${SYMENGINE_VERSION}/symengine-${SYMENGINE_VERSION}.tar.gz  > symengine-${SYMENGINE_VERSION}.tar.gz \
-  && tar xvf symengine-${SYMENGINE_VERSION}.tar.gz > /dev/null 2>&1 \
-  && cd symengine-${SYMENGINE_VERSION} \
-  && mkdir build \
-  && cd build \
-  && cmake -DBUILD_TESTS=no -DBUILD_BENCHMARKS=no ../ \
-  && make -j4 \
-    # > /dev/null \
-  && make install
 
 # Install spdlog 
 WORKDIR /root/install
