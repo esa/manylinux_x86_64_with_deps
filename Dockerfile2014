@@ -201,7 +201,7 @@ RUN curl -L https://github.com/pybind/pybind11/archive/v${PYBIND11_VERSION}.tar.
   && cd pybind11-${PYBIND11_VERSION} \
   && mkdir build \
   && cd build \
-  && cmake ../ \
+  && cmake ../ -DPYBIND11_TEST=no \
   && make -j4 \
     # > /dev/null \
   && make install
