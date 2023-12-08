@@ -1,5 +1,5 @@
 ARG ARCH=x86_64
-FROM quay.io/pypa/manylinux2014_$ARCH
+FROM docker.io/pagmo2/llvm_manylinux2014_$ARCH
 
 # We place ourself in some safe location to do all installations
 RUN cd \
@@ -19,25 +19,6 @@ RUN curl -L https://raw.githubusercontent.com/esa/manylinux_x86_64_with_deps/mas
     #> /dev/null 2>&1 \
   && make install > /dev/null 2>&1
 
-# Install llvm
-WORKDIR /root/install
-ARG LLVM_VERSION="16.0.4"
-RUN curl -L https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-${LLVM_VERSION}.tar.gz > llvm-project-${LLVM_VERSION}.tar.gz \
-  && tar xvf  llvm-project-${LLVM_VERSION}.tar.gz > /dev/null 2>&1 \
-  && mv llvm*${LLVM_VERSION} llvm_root \
-  && cd llvm_root \
-  && cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release \
-                            -DLLVM_ENABLE_RTTI=ON \
-                            -DLLVM_ENABLE_TERMINFO=OFF \
-                            -DLLVM_INCLUDE_BENCHMARKS=OFF \
-                            -DLLVM_INCLUDE_DOCS=OFF \
-                            -DLLVM_INCLUDE_EXAMPLES=OFF \
-                            -DLLVM_INCLUDE_GO_TESTS=OFF \
-                            -DLLVM_INCLUDE_TESTS=OFF \
-                            -DLLVM_INCLUDE_UTILS=OFF \
-                            -DLLVM_INSTALL_UTILS=OFF \
-  && cmake --build build -j4 --target install
-  
 # Install Boost
 WORKDIR /root/install
 ARG BOOST_VERSION="1.83.0"
