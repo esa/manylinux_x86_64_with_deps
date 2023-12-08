@@ -1,10 +1,6 @@
 ARG ARCH=x86_64
 FROM docker.io/pagmo2/llvm_manylinux2014_$ARCH
 
-# We place ourself in some safe location to do all installations
-RUN cd \
-  && mkdir install
-
 # We install all dependencies in a somehow decreasing order of compile length as to
 # allow for downstream modifications to be efficient.
 
