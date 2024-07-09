@@ -10,7 +10,7 @@ RUN cd \
 
 # Install gmp (before mpfr as its used by it)
 WORKDIR /root/install
-ARG GMP_VERSION="6.3.0"
+ARG GMP_VERSION="6.2.1"
 RUN curl -L https://raw.githubusercontent.com/esa/manylinux_x86_64_with_deps/master/gmp-${GMP_VERSION}.tar.bz2 > gmp-${GMP_VERSION}.tar.bz2 \
   && tar xvf gmp-${GMP_VERSION}.tar.bz2  > /dev/null 2>&1 \
   && cd gmp-${GMP_VERSION} > /dev/null 2>&1 \
@@ -19,9 +19,28 @@ RUN curl -L https://raw.githubusercontent.com/esa/manylinux_x86_64_with_deps/mas
     #> /dev/null 2>&1 \
   && make install > /dev/null 2>&1
 
+# Install llvm
+WORKDIR /root/install
+ARG LLVM_VERSION="15.0.7"
+RUN curl -L https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-${LLVM_VERSION}.tar.gz > llvm-project-${LLVM_VERSION}.tar.gz \
+  && tar xvf  llvm-project-${LLVM_VERSION}.tar.gz > /dev/null 2>&1 \
+  && mv llvm*${LLVM_VERSION} llvm_root \
+  && cd llvm_root \
+  && cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release \
+                            -DLLVM_ENABLE_RTTI=ON \
+                            -DLLVM_ENABLE_TERMINFO=OFF \
+                            -DLLVM_INCLUDE_BENCHMARKS=OFF \
+                            -DLLVM_INCLUDE_DOCS=OFF \
+                            -DLLVM_INCLUDE_EXAMPLES=OFF \
+                            -DLLVM_INCLUDE_GO_TESTS=OFF \
+                            -DLLVM_INCLUDE_TESTS=OFF \
+                            -DLLVM_INCLUDE_UTILS=OFF \
+                            -DLLVM_INSTALL_UTILS=OFF \
+  && cmake --build build -j4 --target install
+  
 # Install Boost
 WORKDIR /root/install
-ARG BOOST_VERSION="1.83.0"
+ARG BOOST_VERSION="1.80.0"
 # Boost libraries download
 RUN curl -L https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
   && tar xjf boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
@@ -51,7 +70,7 @@ RUN cd ThirdParty-Mumps && ./get.Mumps && ./configure && make && make install
 
 # Download Ipopt 
 WORKDIR /root/install
-ARG IPOPT_VERSION="3.14.13"
+ARG IPOPT_VERSION="3.14.10"
 RUN curl -L  https://github.com/coin-or/Ipopt/archive/releases/${IPOPT_VERSION}.tar.gz > ipopt.tar.gz \
   && tar -xvf ipopt.tar.gz > /dev/null \
   && mv Ipopt* ipopt
@@ -61,7 +80,7 @@ RUN cd ipopt && ./configure && make -j4 && make install
 
 # Install mpfr
 WORKDIR /root/install
-ARG MPFR_VERSION="4.2.1"
+ARG MPFR_VERSION="4.1.0"
 RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz > mpfr-${MPFR_VERSION}.tar.gz \
   && tar xvf mpfr-${MPFR_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd mpfr-${MPFR_VERSION} \
@@ -71,21 +90,21 @@ RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz
   && make install > /dev/null 2>&1
 
 # Install abseil
-#WORKDIR /root/install
-#ARG ABSEIL_VERSION="20220623.0"
-#RUN curl -L https://github.com/abseil/abseil-cpp/archive/${ABSEIL_VERSION}.tar.gz > abseil.tar.gz \
-#  && tar xzf abseil.tar.gz > /dev/null 2>&1 \
-#  && cd abseil-cpp-${ABSEIL_VERSION} \
-#  && mkdir build \
-#  && cd build \
-#  && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=-fPIC ../ \
-#  && make -j4 \
-#  #> /dev/null 2>&1 \
-#  && make install
+WORKDIR /root/install
+ARG ABSEIL_VERSION="20220623.0"
+RUN curl -L https://github.com/abseil/abseil-cpp/archive/${ABSEIL_VERSION}.tar.gz > abseil.tar.gz \
+  && tar xzf abseil.tar.gz > /dev/null 2>&1 \
+  && cd abseil-cpp-${ABSEIL_VERSION} \
+  && mkdir build \
+  && cd build \
+  && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=-fPIC ../ \
+  && make -j4 \
+  #> /dev/null 2>&1 \
+  && make install
 
 # Installing TBB
 WORKDIR /root/install
-ARG TBB_VERSION="2021.11.0"
+ARG TBB_VERSION="2021.7.0"
 RUN curl -L https://github.com/oneapi-src/oneTBB/archive/refs/tags/v${TBB_VERSION}.tar.gz > tbb.tar.gz \
   && tar xvf tbb.tar.gz > /dev/null 2>&1 \
   && cd oneTBB-${TBB_VERSION} \
@@ -110,7 +129,7 @@ RUN curl -L https://gitlab.com/libeigen/eigen/-/archive/${EIGEN3_VERSION}/eigen-
 
 # Install fmt
 WORKDIR /root/install
-ARG FMT_VERSION="10.1.1"
+ARG FMT_VERSION="9.1.0"
 RUN curl -L https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.tar.gz > fmt.tar.gz \
   && tar xzf fmt.tar.gz > /dev/null 2>&1 \
   && cd fmt-${FMT_VERSION} \
@@ -123,7 +142,7 @@ RUN curl -L https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.tar.gz > fmt.ta
 
 # Install mp++
 WORKDIR /root/install
-ARG MPPP_VERSION="1.0.2"
+ARG MPPP_VERSION="0.27"
 RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz > mppp.tar.gz \
   && tar xzf mppp.tar.gz > /dev/null 2>&1 \
   && cd mppp-${MPPP_VERSION} \
@@ -148,17 +167,17 @@ RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz >
   && make install
 
 # Install obake
-#WORKDIR /root/install
-#ARG OBAKE_VERSION="0.8.0"
-#RUN curl -L https://github.com/bluescarni/obake/archive/v${OBAKE_VERSION}.tar.gz > obake.tar.gz \
-#  && tar xzf obake.tar.gz > /dev/null 2>&1 \
-#  && cd obake-${OBAKE_VERSION} \
-#  && mkdir build \
-#  && cd build \
-#  && LDFLAGS="-lrt ${LDFLAGS}"; cmake -DBoost_NO_BOOST_CMAKE=ON -DOBAKE_WITH_LIBBACKTRACE=no -DCMAKE_BUILD_TYPE=Release ../ \
-#  && make -j4 \
-#  # > /dev/null \
-#  && make install
+WORKDIR /root/install
+ARG OBAKE_VERSION="0.8.0"
+RUN curl -L https://github.com/bluescarni/obake/archive/v${OBAKE_VERSION}.tar.gz > obake.tar.gz \
+  && tar xzf obake.tar.gz > /dev/null 2>&1 \
+  && cd obake-${OBAKE_VERSION} \
+  && mkdir build \
+  && cd build \
+  && LDFLAGS="-lrt ${LDFLAGS}"; cmake -DBoost_NO_BOOST_CMAKE=ON -DOBAKE_WITH_LIBBACKTRACE=no -DCMAKE_BUILD_TYPE=Release ../ \
+  && make -j4 \
+  # > /dev/null \
+  && make install
 
 # Install NLopt
 WORKDIR /root/install
@@ -175,21 +194,21 @@ RUN curl -L  https://github.com/stevengj/nlopt/archive/v${NLOPT_VERSION}.tar.gz 
   && make install > /dev/null
 
 # Install symengine (requires gmp)
-#WORKDIR /root/install
-#ARG SYMENGINE_VERSION="0.9.0"
-#RUN curl -L https://github.com/symengine/symengine/releases/download/v${SYMENGINE_VERSION}/symengine-${SYMENGINE_VERSION}.tar.gz  > symengine-${SYMENGINE_VERSION}.tar.gz \
-#  && tar xvf symengine-${SYMENGINE_VERSION}.tar.gz > /dev/null 2>&1 \
-#  && cd symengine-${SYMENGINE_VERSION} \
-#  && mkdir build \
-#  && cd build \
-#  && cmake -DBUILD_TEST=no ../ \
-#  && make -j4 \
-#    # > /dev/null \
-#  && make install
+WORKDIR /root/install
+ARG SYMENGINE_VERSION="0.9.0"
+RUN curl -L https://github.com/symengine/symengine/releases/download/v${SYMENGINE_VERSION}/symengine-${SYMENGINE_VERSION}.tar.gz  > symengine-${SYMENGINE_VERSION}.tar.gz \
+  && tar xvf symengine-${SYMENGINE_VERSION}.tar.gz > /dev/null 2>&1 \
+  && cd symengine-${SYMENGINE_VERSION} \
+  && mkdir build \
+  && cd build \
+  && cmake -DBUILD_TEST=no ../ \
+  && make -j4 \
+    # > /dev/null \
+  && make install
 
 # Install spdlog 
 WORKDIR /root/install
-ARG SPDLOG_VERSION="1.12.0"
+ARG SPDLOG_VERSION="1.11.0"
 RUN curl -L https://github.com/gabime/spdlog/archive/refs/tags/v${SPDLOG_VERSION}.tar.gz  > spdlog-${SPDLOG_VERSION}.tar.gz \
   && tar xvf spdlog-${SPDLOG_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd spdlog-${SPDLOG_VERSION} \
@@ -208,23 +227,24 @@ RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  >
   && cd sleef-${SLEEF_VERSION} \
   && mkdir build \
   && cd build \
-  && LDFLAGS="-lrt ${LDFLAGS}"; cmake ../ -DBUILD_TESTS=no \
+  && LDFLAGS="-lrt ${LDFLAGS}"; cmake ../ \
   && make -j4 \
     # > /dev/null \
   && make install
 
 # Install pybind11 
 WORKDIR /root/install
-ARG PYBIND11_VERSION="2.11.1"
+ARG PYBIND11_VERSION="2.10.3"
 RUN curl -L https://github.com/pybind/pybind11/archive/v${PYBIND11_VERSION}.tar.gz  > pybind11-${PYBIND11_VERSION}.tar.gz \
   && tar xvf pybind11-${PYBIND11_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd pybind11-${PYBIND11_VERSION} \
   && mkdir build \
   && cd build \
-  && cmake ../ -DPYBIND11_TEST=no \
+  && cmake ../ \
   && make -j4 \
     # > /dev/null \
   && make install
 
 # Making sure the new libraries (in /usr/local/lib) can be found
 RUN ldconfig
+  
