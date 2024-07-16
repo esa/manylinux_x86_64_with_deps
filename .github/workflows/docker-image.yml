@@ -26,13 +26,14 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./Dockerfile228
+          file: ./Dockerfile
           platforms: linux/amd64
           push: true
           # This section is not necessary as this is the default in the Dockerfile,
           # Added to be explicit
           build-args: |
             ARCH=x86_64
+            MANYLINUXIMG=manylinux_2_28
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/manylinux228_x86_64_with_deps:latest
   manylinux2014_x86_64_with_deps-build:
     runs-on: ubuntu-latest
@@ -54,11 +55,12 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./Dockerfile2014
+          file: ./Dockerfile
           platforms: linux/amd64
           push: true
           # This section is not necessary as this is the default in the Dockerfile,
           # Added to be explicit
           build-args: |
             ARCH=x86_64
+            MANYLINUXIMG=manylinux2014
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/manylinux2014_x86_64_with_deps:latest
