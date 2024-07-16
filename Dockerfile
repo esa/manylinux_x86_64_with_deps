@@ -166,7 +166,7 @@ RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  >
   && cd sleef-${SLEEF_VERSION} \
   && mkdir build \
   && cd build \
-  && LDFLAGS="-lrt ${LDFLAGS}"; cmake ../ -DBUILD_TESTS=no \
+  && LDFLAGS="-lrt ${LDFLAGS}"; cmake ../ -DSLEEF_BUILD_TESTS=no -DSLEEF_BUILD_SHARED_LIBS=yes \
   && make -j4 \
     # > /dev/null \
   && make install
