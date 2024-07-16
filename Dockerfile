@@ -1,5 +1,5 @@
 ARG ARCH=x86_64
-FROM docker.io/pagmo2/${MANYLINUXIMG}_${ARCH}
+FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH}
 
 # We install all dependencies in a somehow decreasing order of compile length as to
 # allow for downstream modifications to be efficient.
