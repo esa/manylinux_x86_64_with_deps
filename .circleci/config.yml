@@ -21,23 +21,6 @@ jobs:
     - docker/push:
         image: $DOCKERHUB_USERNAME/manylinux228_aarch64_with_deps
         tag: latest
-  manylinux2014_aarch64_with_deps-build:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: arm.large
-    steps:
-    - checkout
-    - docker/check:
-        docker-username: DOCKERHUB_USERNAME
-        docker-password: DOCKERHUB_TOKEN
-    - docker/build:
-        dockerfile: Dockerfile
-        extra_build_args: --build-arg ARCH=aarch64 --build-arg MANYLINUXIMG=manylinux2014
-        image: $DOCKERHUB_USERNAME/manylinux2014_aarch64_with_deps
-        tag: latest
-    - docker/push:
-        image: $DOCKERHUB_USERNAME/manylinux2014_aarch64_with_deps
-        tag: latest
 
 workflows:
   version: 2.1
