@@ -27,4 +27,3 @@ workflows:
   all_builds:
     jobs:
     - manylinux228_aarch64_with_deps-build
-    - manylinux2014_aarch64_with_deps-build
