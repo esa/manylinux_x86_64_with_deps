@@ -124,7 +124,6 @@ RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz >
            -DMPPP_WITH_MPFR=yes \
            -DCMAKE_CXX_STANDARD=17 \
            -DMPPP_WITH_BOOST_S11N=ON \
-           -DBoost_NO_BOOST_CMAKE=ON \
            -DMPPP_WITH_FMT=ON \
            $CMAKE_PARAMS \
            ../ \
@@ -155,7 +154,7 @@ RUN curl -L https://github.com/gabime/spdlog/archive/refs/tags/v${SPDLOG_VERSION
   && cd spdlog-${SPDLOG_VERSION} \
   && mkdir build \
   && cd build \
-  && cmake -DSPDLOG_FMT_EXTERNAL=ON -D SPDLOG_BUILD_SHARED=ON ../ \
+  && cmake -DSPDLOG_FMT_EXTERNAL=ON -DSPDLOG_BUILD_SHARED=ON -DSPDLOG_BUILD_EXAMPLE=OFF ../ \
   && make -j4 \
     # > /dev/null \
   && make install
