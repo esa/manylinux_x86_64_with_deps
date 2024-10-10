@@ -18,7 +18,7 @@ RUN curl -L https://raw.githubusercontent.com/esa/manylinux_x86_64_with_deps/mas
 
 # Install Boost
 WORKDIR /root/install
-ARG BOOST_VERSION="1.85.0"
+ARG BOOST_VERSION="1.86.0"
 # Boost libraries download
 RUN curl -L https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
   && tar xjf boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
@@ -96,7 +96,7 @@ RUN curl -L https://gitlab.com/libeigen/eigen/-/archive/${EIGEN3_VERSION}/eigen-
 
 # Install fmt
 WORKDIR /root/install
-ARG FMT_VERSION="10.2.1"
+ARG FMT_VERSION="11.0.2"
 RUN curl -L https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.tar.gz > fmt.tar.gz \
   && tar xzf fmt.tar.gz > /dev/null 2>&1 \
   && cd fmt-${FMT_VERSION} \
@@ -109,7 +109,7 @@ RUN curl -L https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.tar.gz > fmt.ta
 
 # Install mp++
 WORKDIR /root/install
-ARG MPPP_VERSION="1.0.2"
+ARG MPPP_VERSION="1.0.4"
 RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz > mppp.tar.gz \
   && tar xzf mppp.tar.gz > /dev/null 2>&1 \
   && cd mppp-${MPPP_VERSION} \
@@ -149,7 +149,7 @@ RUN curl -L  https://github.com/stevengj/nlopt/archive/v${NLOPT_VERSION}.tar.gz 
 
 # Install spdlog 
 WORKDIR /root/install
-ARG SPDLOG_VERSION="1.13.0"
+ARG SPDLOG_VERSION="1.14.1"
 RUN curl -L https://github.com/gabime/spdlog/archive/refs/tags/v${SPDLOG_VERSION}.tar.gz  > spdlog-${SPDLOG_VERSION}.tar.gz \
   && tar xvf spdlog-${SPDLOG_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd spdlog-${SPDLOG_VERSION} \
@@ -162,7 +162,7 @@ RUN curl -L https://github.com/gabime/spdlog/archive/refs/tags/v${SPDLOG_VERSION
 
 # Install sleef 
 WORKDIR /root/install
-ARG SLEEF_VERSION="3.6.1"
+ARG SLEEF_VERSION="3.7"
 RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  > sleef-${SLEEF_VERSION}.tar.gz \
   && tar xvf sleef-${SLEEF_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd sleef-${SLEEF_VERSION} \
@@ -175,7 +175,7 @@ RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  >
 
 # Install pybind11 
 WORKDIR /root/install
-ARG PYBIND11_VERSION="2.13.1"
+ARG PYBIND11_VERSION="2.13.6"
 RUN curl -L https://github.com/pybind/pybind11/archive/v${PYBIND11_VERSION}.tar.gz  > pybind11-${PYBIND11_VERSION}.tar.gz \
   && tar xvf pybind11-${PYBIND11_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd pybind11-${PYBIND11_VERSION} \
@@ -188,4 +188,3 @@ RUN curl -L https://github.com/pybind/pybind11/archive/v${PYBIND11_VERSION}.tar.
 
 # Making sure the new libraries (in /usr/local/lib) can be found
 RUN ldconfig
-  
