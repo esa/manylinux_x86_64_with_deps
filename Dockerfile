@@ -109,7 +109,7 @@ RUN curl -L https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.tar.gz > fmt.ta
 
 # Install mp++
 WORKDIR /root/install
-ARG MPPP_VERSION="1.0.4"
+ARG MPPP_VERSION="2.0.0"
 RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz > mppp.tar.gz \
   && tar xzf mppp.tar.gz > /dev/null 2>&1 \
   && cd mppp-${MPPP_VERSION} \
