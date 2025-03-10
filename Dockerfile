@@ -20,7 +20,7 @@ RUN curl -L https://raw.githubusercontent.com/esa/manylinux_x86_64_with_deps/mas
 WORKDIR /root/install
 ARG BOOST_VERSION="1.86.0"
 # Boost libraries download
-RUN curl -L https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
+RUN curl -L https://archives.boost.io/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
   && tar xjf boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
   && cd boost_`echo ${BOOST_VERSION}|tr "." "_"`
 # Make the boost libraries,  install headers
