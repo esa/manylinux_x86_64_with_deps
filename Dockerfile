@@ -28,7 +28,7 @@ RUN cd boost_`echo ${BOOST_VERSION}|tr "." "_"` \
   && sh bootstrap.sh \
   # > /dev/null \
   && ./b2 --toolset=gcc link=shared threading=multi cxxflags="-std=c++11" variant=release \
-  --with-date_time --with-test --with-system --with-filesystem --with-iostreams --with-timer --with-regex --with-chrono --with-serialization -j4 install 
+  --with-date_time --with-test --with-system --with-filesystem --with-iostreams --with-timer --with-regex --with-chrono --with-serialization --with-charconv -j4 install
   # > /dev/null
 
 # Install Lapack and blas (4 IPOPT)
