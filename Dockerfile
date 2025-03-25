@@ -6,7 +6,7 @@ FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH}
 # allow for downstream modifications to be efficient.
 
 # Install openssl.
-RUN yum -y install perl-IPC-Cmd
+RUN yum -y install perl-IPC-Cmd perl-Pod-Html
 WORKDIR /root/install
 ARG OPENSSL_VERSION="3.4.1"
 RUN curl -L https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz > openssl.tar.gz \
