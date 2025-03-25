@@ -9,12 +9,11 @@ FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH}
 WORKDIR /root/install
 ARG OPENSSL_VERSION="3.4.1"
 RUN curl -L https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz > openssl.tar.gz \
-  && tar xvzf openssl.tar.gz  > /dev/null 2>&1 \
-  && cd openssl-${OPENSSL_VERSION} > /dev/null 2>&1 \
-  && ./Configure > /dev/null 2>&1 \
+  && tar xvzf openssl.tar.gz \
+  && cd openssl-${OPENSSL_VERSION} \
+  && ./Configure \
   && make -j4 \
-    #> /dev/null 2>&1 \
-  && make install > /dev/null 2>&1
+  && make install
 
 # Install gmp (before mpfr as its used by it)
 WORKDIR /root/install
