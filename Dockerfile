@@ -81,10 +81,8 @@ RUN curl -k -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar
 
 # Installing TBB
 WORKDIR /root/install
-# NOTE: pin to 2021.10.0 for now due to this bug:
-# https://github.com/oneapi-src/oneTBB/issues/1417
-ARG TBB_VERSION="2021.10.0"
-RUN curl -L https://github.com/oneapi-src/oneTBB/archive/refs/tags/v${TBB_VERSION}.tar.gz > tbb.tar.gz \
+ARG TBB_VERSION="2022.1.0"
+RUN curl -L https://github.com/uxlfoundation/oneTBB/archive/refs/tags/v${TBB_VERSION}.tar.gz > tbb.tar.gz \
   && tar xvf tbb.tar.gz > /dev/null 2>&1 \
   && cd oneTBB-${TBB_VERSION} \
   && mkdir build \
