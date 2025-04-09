@@ -144,7 +144,7 @@ RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz >
 
 # Install NLopt
 WORKDIR /root/install
-ARG NLOPT_VERSION="2.7.1"
+ARG NLOPT_VERSION="2.10.0"
 # NOTE: use alternative mirror as the one from the original webpage is faulty.
 RUN curl -L  https://github.com/stevengj/nlopt/archive/v${NLOPT_VERSION}.tar.gz > NLopt-${NLOPT_VERSION}.tar.gz \
   && tar xzf NLopt-${NLOPT_VERSION}.tar.gz \
