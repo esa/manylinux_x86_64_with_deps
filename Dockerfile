@@ -68,9 +68,10 @@ RUN curl -L  https://github.com/coin-or/Ipopt/archive/releases/${IPOPT_VERSION}.
 RUN cd ipopt && ./configure && make -j4 && make install
 
 # Install mpfr
+# NOTE: the '-k' is temporary until they sort out the certificate.
 WORKDIR /root/install
 ARG MPFR_VERSION="4.2.1"
-RUN curl -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz > mpfr-${MPFR_VERSION}.tar.gz \
+RUN curl -k -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz > mpfr-${MPFR_VERSION}.tar.gz \
   && tar xvf mpfr-${MPFR_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd mpfr-${MPFR_VERSION} \
   && ./configure > /dev/null 2>&1 \
