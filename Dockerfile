@@ -1,6 +1,6 @@
-ARG ARCH=x86_64
+ARG ARCH
 ARG MANYLINUXIMG
-FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH}
+FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH} as builder
 
 # We install all dependencies in a somehow decreasing order of compile length as to
 # allow for downstream modifications to be efficient.
@@ -8,7 +8,7 @@ FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH}
 # Install openssl.
 RUN yum -y install perl-IPC-Cmd perl-Pod-Html
 WORKDIR /root/install
-ARG OPENSSL_VERSION="3.4.1"
+ARG OPENSSL_VERSION="3.6.0"
 RUN curl -L https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz > openssl.tar.gz \
   && tar xvzf openssl.tar.gz \
   && cd openssl-${OPENSSL_VERSION} \
@@ -29,7 +29,7 @@ RUN curl -L https://raw.githubusercontent.com/esa/manylinux_x86_64_with_deps/mas
 
 # Install Boost
 WORKDIR /root/install
-ARG BOOST_VERSION="1.86.0"
+ARG BOOST_VERSION="1.88.0"
 # Boost libraries download
 RUN curl -L https://archives.boost.io/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
   && tar xjf boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
@@ -59,7 +59,7 @@ RUN cd ThirdParty-Mumps && ./get.Mumps && ./configure && make && make install
 
 # Download Ipopt 
 WORKDIR /root/install
-ARG IPOPT_VERSION="3.14.16"
+ARG IPOPT_VERSION="3.14.19"
 RUN curl -L  https://github.com/coin-or/Ipopt/archive/releases/${IPOPT_VERSION}.tar.gz > ipopt.tar.gz \
   && tar -xvf ipopt.tar.gz > /dev/null \
   && mv Ipopt* ipopt
@@ -70,7 +70,7 @@ RUN cd ipopt && ./configure && make -j4 && make install
 # Install mpfr
 # NOTE: the '-k' is temporary until they sort out the certificate.
 WORKDIR /root/install
-ARG MPFR_VERSION="4.2.1"
+ARG MPFR_VERSION="4.2.2"
 RUN curl -k -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz > mpfr-${MPFR_VERSION}.tar.gz \
   && tar xvf mpfr-${MPFR_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd mpfr-${MPFR_VERSION} \
@@ -81,7 +81,7 @@ RUN curl -k -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar
 
 # Installing TBB
 WORKDIR /root/install
-ARG TBB_VERSION="2022.1.0"
+ARG TBB_VERSION="2022.3.0"
 RUN curl -L https://github.com/uxlfoundation/oneTBB/archive/refs/tags/v${TBB_VERSION}.tar.gz > tbb.tar.gz \
   && tar xvf tbb.tar.gz > /dev/null 2>&1 \
   && cd oneTBB-${TBB_VERSION} \
@@ -94,7 +94,7 @@ RUN curl -L https://github.com/uxlfoundation/oneTBB/archive/refs/tags/v${TBB_VER
 
 # Install Eigen
 WORKDIR /root/install
-ARG EIGEN3_VERSION="3.4.0"
+ARG EIGEN3_VERSION="5.0.0"
 RUN curl -L https://gitlab.com/libeigen/eigen/-/archive/${EIGEN3_VERSION}/eigen-${EIGEN3_VERSION}.tar.gz > ${EIGEN3_VERSION} \
   && tar xzf ${EIGEN3_VERSION} > /dev/null 2>&1 \
   && cd eigen* \
@@ -106,7 +106,7 @@ RUN curl -L https://gitlab.com/libeigen/eigen/-/archive/${EIGEN3_VERSION}/eigen-
 
 # Install fmt
 WORKDIR /root/install
-ARG FMT_VERSION="11.0.2"
+ARG FMT_VERSION="12.1.0"
 RUN curl -L https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.tar.gz > fmt.tar.gz \
   && tar xzf fmt.tar.gz > /dev/null 2>&1 \
   && cd fmt-${FMT_VERSION} \
@@ -158,7 +158,7 @@ RUN curl -L  https://github.com/stevengj/nlopt/archive/v${NLOPT_VERSION}.tar.gz 
 
 # Install spdlog 
 WORKDIR /root/install
-ARG SPDLOG_VERSION="1.14.1"
+ARG SPDLOG_VERSION="1.16.0"
 RUN curl -L https://github.com/gabime/spdlog/archive/refs/tags/v${SPDLOG_VERSION}.tar.gz  > spdlog-${SPDLOG_VERSION}.tar.gz \
   && tar xvf spdlog-${SPDLOG_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd spdlog-${SPDLOG_VERSION} \
@@ -171,7 +171,7 @@ RUN curl -L https://github.com/gabime/spdlog/archive/refs/tags/v${SPDLOG_VERSION
 
 # Install sleef 
 WORKDIR /root/install
-ARG SLEEF_VERSION="3.7"
+ARG SLEEF_VERSION="3.9.0"
 RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  > sleef-${SLEEF_VERSION}.tar.gz \
   && tar xvf sleef-${SLEEF_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd sleef-${SLEEF_VERSION} \
@@ -184,7 +184,7 @@ RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  >
 
 # Install pybind11 
 WORKDIR /root/install
-ARG PYBIND11_VERSION="2.13.6"
+ARG PYBIND11_VERSION="3.0.1"
 RUN curl -L https://github.com/pybind/pybind11/archive/v${PYBIND11_VERSION}.tar.gz  > pybind11-${PYBIND11_VERSION}.tar.gz \
   && tar xvf pybind11-${PYBIND11_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd pybind11-${PYBIND11_VERSION} \
@@ -195,5 +195,11 @@ RUN curl -L https://github.com/pybind/pybind11/archive/v${PYBIND11_VERSION}.tar.
     # > /dev/null \
   && make install
 
-# Making sure the new libraries (in /usr/local/lib) can be found
+# Final stage.
+FROM quay.io/pypa/${MANYLINUXIMG}_${ARCH}
+
+# 2. Copy the entire /usr/local contents from the builder.
+COPY --from=builder /usr/local/ /usr/local/
+
+# 3. Update the linker cache.
 RUN ldconfig
