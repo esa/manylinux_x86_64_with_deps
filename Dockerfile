@@ -196,7 +196,7 @@ RUN curl -L https://github.com/pybind/pybind11/archive/v${PYBIND11_VERSION}.tar.
   && make install
 
 # Final stage.
-FROM quay.io/pypa/${MANYLINUXIMG}_${ARCH}
+FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH}
 
 # 2. Copy the entire /usr/local contents from the builder.
 COPY --from=builder /usr/local/ /usr/local/
