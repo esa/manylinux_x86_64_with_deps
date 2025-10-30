@@ -1,12 +1,12 @@
 ARG ARCH
 ARG MANYLINUXIMG
-FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH} as builder
+FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH} AS builder
 
 # We install all dependencies in a somehow decreasing order of compile length as to
 # allow for downstream modifications to be efficient.
 
 # Install openssl.
-RUN yum -y install perl-IPC-Cmd perl-Pod-Html
+RUN yum -y install perl-IPC-Cmd perl-Pod-Html perl-Time-Piece
 WORKDIR /root/install
 ARG OPENSSL_VERSION="3.6.0"
 RUN curl -L https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz > openssl.tar.gz \
