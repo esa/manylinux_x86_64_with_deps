@@ -106,7 +106,7 @@ RUN curl -L https://gitlab.com/libeigen/eigen/-/archive/${EIGEN3_VERSION}/eigen-
 
 # Install fmt
 WORKDIR /root/install
-ARG FMT_VERSION="12.1.0"
+ARG FMT_VERSION="12.0.0"
 RUN curl -L https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.tar.gz > fmt.tar.gz \
   && tar xzf fmt.tar.gz > /dev/null 2>&1 \
   && cd fmt-${FMT_VERSION} \
