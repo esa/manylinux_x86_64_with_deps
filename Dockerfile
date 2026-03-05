@@ -8,7 +8,7 @@ FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH} AS builder
 # Install openssl.
 RUN yum -y install perl-IPC-Cmd perl-Pod-Html perl-Time-Piece
 WORKDIR /root/install
-ARG OPENSSL_VERSION="3.6.0"
+ARG OPENSSL_VERSION="3.6.1"
 RUN curl -L https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz > openssl.tar.gz \
   && tar xvzf openssl.tar.gz \
   && cd openssl-${OPENSSL_VERSION} \
@@ -94,7 +94,7 @@ RUN curl -L https://github.com/uxlfoundation/oneTBB/archive/refs/tags/v${TBB_VER
 
 # Install Eigen
 WORKDIR /root/install
-ARG EIGEN3_VERSION="5.0.0"
+ARG EIGEN3_VERSION="5.0.1"
 RUN curl -L https://gitlab.com/libeigen/eigen/-/archive/${EIGEN3_VERSION}/eigen-${EIGEN3_VERSION}.tar.gz > ${EIGEN3_VERSION} \
   && tar xzf ${EIGEN3_VERSION} > /dev/null 2>&1 \
   && cd eigen* \
@@ -106,7 +106,7 @@ RUN curl -L https://gitlab.com/libeigen/eigen/-/archive/${EIGEN3_VERSION}/eigen-
 
 # Install fmt
 WORKDIR /root/install
-ARG FMT_VERSION="12.0.0"
+ARG FMT_VERSION="12.1.0"
 RUN curl -L https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.tar.gz > fmt.tar.gz \
   && tar xzf fmt.tar.gz > /dev/null 2>&1 \
   && cd fmt-${FMT_VERSION} \
@@ -144,7 +144,7 @@ RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz >
 
 # Install NLopt
 WORKDIR /root/install
-ARG NLOPT_VERSION="2.10.0"
+ARG NLOPT_VERSION="2.10.1"
 # NOTE: use alternative mirror as the one from the original webpage is faulty.
 RUN curl -L  https://github.com/stevengj/nlopt/archive/v${NLOPT_VERSION}.tar.gz > NLopt-${NLOPT_VERSION}.tar.gz \
   && tar xzf NLopt-${NLOPT_VERSION}.tar.gz \
@@ -158,7 +158,7 @@ RUN curl -L  https://github.com/stevengj/nlopt/archive/v${NLOPT_VERSION}.tar.gz 
 
 # Install spdlog 
 WORKDIR /root/install
-ARG SPDLOG_VERSION="1.16.0"
+ARG SPDLOG_VERSION="1.17.0"
 RUN curl -L https://github.com/gabime/spdlog/archive/refs/tags/v${SPDLOG_VERSION}.tar.gz  > spdlog-${SPDLOG_VERSION}.tar.gz \
   && tar xvf spdlog-${SPDLOG_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd spdlog-${SPDLOG_VERSION} \
@@ -184,7 +184,7 @@ RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  >
 
 # Install pybind11 
 WORKDIR /root/install
-ARG PYBIND11_VERSION="3.0.1"
+ARG PYBIND11_VERSION="3.0.2"
 RUN curl -L https://github.com/pybind/pybind11/archive/v${PYBIND11_VERSION}.tar.gz  > pybind11-${PYBIND11_VERSION}.tar.gz \
   && tar xvf pybind11-${PYBIND11_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd pybind11-${PYBIND11_VERSION} \
