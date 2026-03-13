@@ -5,6 +5,54 @@ FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH} AS builder
 # We install all dependencies in a somehow decreasing order of compile length as to
 # allow for downstream modifications to be efficient.
 
+# Install sqlite.
+WORKDIR /root/install
+ARG SQLITE_VERSION="3510300"
+RUN curl -L https://www.sqlite.org/2026/sqlite-autoconf-${SQLITE_VERSION}.tar.gz \
+  -o sqlite-autoconf-${SQLITE_VERSION}.tar.gz \
+  && tar xzf sqlite-autoconf-${SQLITE_VERSION}.tar.gz \
+  && cd sqlite-autoconf-${SQLITE_VERSION} \
+  && export OPTIONS=" \
+    -DSQLITE_DQS=3 \
+    -DSQLITE_ENABLE_COLUMN_METADATA \
+    -DSQLITE_ENABLE_DBSTAT_VTAB \
+    -DSQLITE_ENABLE_DESERIALIZE \
+    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
+    -DSQLITE_ENABLE_FTS3 \
+    -DSQLITE_ENABLE_FTS3_PARENTHESIS \
+    -DSQLITE_ENABLE_FTS3_TOKENIZER \
+    -DSQLITE_ENABLE_FTS4 \
+    -DSQLITE_ENABLE_FTS5 \
+    -DSQLITE_ENABLE_GEOPOLY \
+    -DSQLITE_ENABLE_JSON1 \
+    -DSQLITE_ENABLE_MATH_FUNCTIONS \
+    -DSQLITE_ENABLE_PREUPDATE_HOOK \
+    -DSQLITE_ENABLE_RTREE \
+    -DSQLITE_ENABLE_SESSION \
+    -DSQLITE_ENABLE_STAT4 \
+    -DSQLITE_ENABLE_STMTVTAB \
+    -DSQLITE_ENABLE_UNLOCK_NOTIFY \
+    -DSQLITE_ENABLE_UPDATE_DELETE_LIMIT \
+    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
+    -DSQLITE_MAX_EXPR_DEPTH=10000 \
+    -DSQLITE_MAX_VARIABLE_NUMBER=250000 \
+    -DSQLITE_SOUNDEX \
+    -DSQLITE_STRICT_SUBTYPE=1 \
+    -DSQLITE_THREADSAFE=1 \
+    -DSQLITE_USE_URI \
+    -DHAVE_ISNAN \
+    -DHAVE_PREAD64 \
+    -DHAVE_PWRITE64" \
+  && CFLAGS="$OPTIONS" \
+    ./configure \
+        --prefix=/usr/local \
+        --enable-threadsafe \
+        --enable-load-extension \
+        --disable-static \
+        --disable-static-shell \
+  && make -j4 \
+  && make install
+
 # Install openssl.
 RUN yum -y install perl-IPC-Cmd perl-Pod-Html perl-Time-Piece
 WORKDIR /root/install
