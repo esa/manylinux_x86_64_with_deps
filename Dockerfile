@@ -7,7 +7,7 @@ FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH} AS builder
 
 # Install sqlite.
 WORKDIR /root/install
-ARG SQLITE_VERSION="3510300"
+ARG SQLITE_VERSION="3530200"
 RUN curl -L https://www.sqlite.org/2026/sqlite-autoconf-${SQLITE_VERSION}.tar.gz \
   -o sqlite-autoconf-${SQLITE_VERSION}.tar.gz \
   && tar xzf sqlite-autoconf-${SQLITE_VERSION}.tar.gz \
@@ -56,7 +56,7 @@ RUN curl -L https://www.sqlite.org/2026/sqlite-autoconf-${SQLITE_VERSION}.tar.gz
 # Install openssl.
 RUN yum -y install perl-IPC-Cmd perl-Pod-Html perl-Time-Piece
 WORKDIR /root/install
-ARG OPENSSL_VERSION="3.6.1"
+ARG OPENSSL_VERSION="4.0.1"
 RUN curl -L https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz > openssl.tar.gz \
   && tar xvzf openssl.tar.gz \
   && cd openssl-${OPENSSL_VERSION} \
@@ -77,7 +77,7 @@ RUN curl -L https://raw.githubusercontent.com/esa/manylinux_x86_64_with_deps/mas
 
 # Install Boost
 WORKDIR /root/install
-ARG BOOST_VERSION="1.88.0"
+ARG BOOST_VERSION="1.91.0"
 # Boost libraries download
 RUN curl -L https://archives.boost.io/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
   && tar xjf boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
@@ -129,7 +129,7 @@ RUN curl -k -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar
 
 # Installing TBB
 WORKDIR /root/install
-ARG TBB_VERSION="2022.3.0"
+ARG TBB_VERSION="2023.0.0"
 RUN curl -L https://github.com/uxlfoundation/oneTBB/archive/refs/tags/v${TBB_VERSION}.tar.gz > tbb.tar.gz \
   && tar xvf tbb.tar.gz > /dev/null 2>&1 \
   && cd oneTBB-${TBB_VERSION} \
@@ -192,7 +192,7 @@ RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz >
 
 # Install NLopt
 WORKDIR /root/install
-ARG NLOPT_VERSION="2.10.1"
+ARG NLOPT_VERSION="2.11.0"
 # NOTE: use alternative mirror as the one from the original webpage is faulty.
 RUN curl -L  https://github.com/stevengj/nlopt/archive/v${NLOPT_VERSION}.tar.gz > NLopt-${NLOPT_VERSION}.tar.gz \
   && tar xzf NLopt-${NLOPT_VERSION}.tar.gz \
@@ -232,7 +232,7 @@ RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  >
 
 # Install pybind11 
 WORKDIR /root/install
-ARG PYBIND11_VERSION="3.0.2"
+ARG PYBIND11_VERSION="3.0.4"
 RUN curl -L https://github.com/pybind/pybind11/archive/v${PYBIND11_VERSION}.tar.gz  > pybind11-${PYBIND11_VERSION}.tar.gz \
   && tar xvf pybind11-${PYBIND11_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd pybind11-${PYBIND11_VERSION} \
