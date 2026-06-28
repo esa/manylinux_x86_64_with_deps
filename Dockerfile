@@ -85,13 +85,12 @@ WORKDIR /root/install
 ARG BOOST_VERSION="1.91.0"
 # Boost libraries download
 RUN curl -L https://archives.boost.io/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
-  && tar xjf boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
-  && cd boost_`echo ${BOOST_VERSION}|tr "." "_"`
+  && tar xjf boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2
 # Make the boost libraries,  install headers
 RUN cd boost_`echo ${BOOST_VERSION}|tr "." "_"` \
   && sh bootstrap.sh \
   # > /dev/null \
-  && ./b2 --toolset=gcc link=shared threading=multi cxxflags="-std=c++11" variant=release \
+  && ./b2 --toolset=gcc link=shared threading=multi cxxflags="-std=c++17" variant=release \
   --with-date_time --with-test --with-filesystem --with-iostreams --with-timer --with-regex --with-chrono --with-serialization --with-charconv -j4 install
   # > /dev/null
 
@@ -230,7 +229,7 @@ RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  >
   && cd sleef-${SLEEF_VERSION} \
   && mkdir build \
   && cd build \
-  && LDFLAGS="-lrt ${LDFLAGS}"; cmake ../ -DSLEEF_BUILD_TESTS=no -DSLEEF_BUILD_SHARED_LIBS=yes \
+  && cmake ../ -DSLEEF_BUILD_TESTS=no -DSLEEF_BUILD_SHARED_LIBS=yes \
   && make -j4 \
     # > /dev/null \
   && make install
