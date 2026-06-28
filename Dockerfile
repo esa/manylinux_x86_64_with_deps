@@ -2,6 +2,11 @@ ARG ARCH
 ARG MANYLINUXIMG
 FROM docker.io/pagmo2/llvm_${MANYLINUXIMG}_${ARCH} AS builder
 
+# NOTE: ARG declared before the first FROM is only in scope for FROM instructions.
+# Re-declare it here so that $ARCH is available in the RUN instructions of this stage
+# (e.g. the conditional enabling of quadmath/real128 in the mp++ build below).
+ARG ARCH
+
 # We install all dependencies in a somehow decreasing order of compile length as to
 # allow for downstream modifications to be efficient.
 
