@@ -12,8 +12,10 @@ ARG ARCH
 
 # Install sqlite.
 WORKDIR /root/install
-ARG SQLITE_VERSION="3530200"
-RUN curl -L https://www.sqlite.org/2026/sqlite-autoconf-${SQLITE_VERSION}.tar.gz \
+ARG SQLITE_VERSION="3540100"
+# NOTE: the download path contains the release year, update it together with the version.
+ARG SQLITE_YEAR="2026"
+RUN curl -L https://www.sqlite.org/${SQLITE_YEAR}/sqlite-autoconf-${SQLITE_VERSION}.tar.gz \
   -o sqlite-autoconf-${SQLITE_VERSION}.tar.gz \
   && tar xzf sqlite-autoconf-${SQLITE_VERSION}.tar.gz \
   && cd sqlite-autoconf-${SQLITE_VERSION} \
@@ -21,7 +23,6 @@ RUN curl -L https://www.sqlite.org/2026/sqlite-autoconf-${SQLITE_VERSION}.tar.gz
     -DSQLITE_DQS=3 \
     -DSQLITE_ENABLE_COLUMN_METADATA \
     -DSQLITE_ENABLE_DBSTAT_VTAB \
-    -DSQLITE_ENABLE_DESERIALIZE \
     -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
     -DSQLITE_ENABLE_FTS3 \
     -DSQLITE_ENABLE_FTS3_PARENTHESIS \
@@ -29,7 +30,6 @@ RUN curl -L https://www.sqlite.org/2026/sqlite-autoconf-${SQLITE_VERSION}.tar.gz
     -DSQLITE_ENABLE_FTS4 \
     -DSQLITE_ENABLE_FTS5 \
     -DSQLITE_ENABLE_GEOPOLY \
-    -DSQLITE_ENABLE_JSON1 \
     -DSQLITE_ENABLE_MATH_FUNCTIONS \
     -DSQLITE_ENABLE_PREUPDATE_HOOK \
     -DSQLITE_ENABLE_RTREE \
@@ -61,11 +61,11 @@ RUN curl -L https://www.sqlite.org/2026/sqlite-autoconf-${SQLITE_VERSION}.tar.gz
 # Install openssl.
 RUN yum -y install perl-IPC-Cmd perl-Pod-Html perl-Time-Piece
 WORKDIR /root/install
-ARG OPENSSL_VERSION="4.0.1"
+ARG OPENSSL_VERSION="4.1.0"
 RUN curl -L https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz > openssl.tar.gz \
   && tar xvzf openssl.tar.gz \
   && cd openssl-${OPENSSL_VERSION} \
-  && ./Configure \
+  && ./Configure no-tests no-docs \
   && make -j4 \
   && make install
 
@@ -82,7 +82,7 @@ RUN curl -L https://raw.githubusercontent.com/esa/manylinux_x86_64_with_deps/mas
 
 # Install Boost
 WORKDIR /root/install
-ARG BOOST_VERSION="1.91.0"
+ARG BOOST_VERSION="1.92.0"
 # Boost libraries download
 RUN curl -L https://archives.boost.io/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 \
   && tar xjf boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2
@@ -99,19 +99,15 @@ WORKDIR /root/install
 RUN yum install -y lapack-devel 
 #\ > /dev/null 
 
-# Install ASL (4 IPOPT)
-WORKDIR /root/install
-RUN git clone https://github.com/coin-or-tools/ThirdParty-ASL.git
-RUN cd ThirdParty-ASL && ./get.ASL && ./configure && make -j4 && make install
-
 # Install MUMPS (4 IPOPT)
 WORKDIR /root/install
-RUN git clone https://github.com/coin-or-tools/ThirdParty-Mumps.git
+# NOTE: track the stable/3.0 branch, which is the one Ipopt 3.14 lists in its .coin-or/Dependencies file.
+RUN git clone --depth 1 -b stable/3.0 https://github.com/coin-or-tools/ThirdParty-Mumps.git
 RUN cd ThirdParty-Mumps && ./get.Mumps && ./configure && make && make install
 
-# Download Ipopt 
+# Download Ipopt
 WORKDIR /root/install
-ARG IPOPT_VERSION="3.14.19"
+ARG IPOPT_VERSION="3.14.20"
 RUN curl -L  https://github.com/coin-or/Ipopt/archive/releases/${IPOPT_VERSION}.tar.gz > ipopt.tar.gz \
   && tar -xvf ipopt.tar.gz > /dev/null \
   && mv Ipopt* ipopt
@@ -120,10 +116,9 @@ RUN curl -L  https://github.com/coin-or/Ipopt/archive/releases/${IPOPT_VERSION}.
 RUN cd ipopt && ./configure && make -j4 && make install
 
 # Install mpfr
-# NOTE: the '-k' is temporary until they sort out the certificate.
 WORKDIR /root/install
 ARG MPFR_VERSION="4.2.2"
-RUN curl -k -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz > mpfr-${MPFR_VERSION}.tar.gz \
+RUN curl -L https://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz > mpfr-${MPFR_VERSION}.tar.gz \
   && tar xvf mpfr-${MPFR_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd mpfr-${MPFR_VERSION} \
   && ./configure > /dev/null 2>&1 \
@@ -133,13 +128,13 @@ RUN curl -k -L http://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar
 
 # Installing TBB
 WORKDIR /root/install
-ARG TBB_VERSION="2023.0.0"
+ARG TBB_VERSION="2023.2.0"
 RUN curl -L https://github.com/uxlfoundation/oneTBB/archive/refs/tags/v${TBB_VERSION}.tar.gz > tbb.tar.gz \
   && tar xvf tbb.tar.gz > /dev/null 2>&1 \
   && cd oneTBB-${TBB_VERSION} \
   && mkdir build \
   && cd build \
-  && cmake -DTBB_TEST=OFF ../ > /dev/null \
+  && cmake -DCMAKE_BUILD_TYPE=Release -DTBB_TEST=OFF -DTCM_BUILD=OFF ../ > /dev/null \
   && make -j4 \
   #> /dev/null \
   && make install 
@@ -152,7 +147,7 @@ RUN curl -L https://gitlab.com/libeigen/eigen/-/archive/${EIGEN3_VERSION}/eigen-
   && cd eigen* \
   && mkdir build \
   && cd build \
-  && cmake ../ \
+  && cmake -DBUILD_TESTING=OFF -DEIGEN_BUILD_BLAS=OFF -DEIGEN_BUILD_LAPACK=OFF ../ \
   #> /dev/null \
   && make install > /dev/null 
 
@@ -182,7 +177,6 @@ RUN curl -L https://github.com/bluescarni/mppp/archive/v${MPPP_VERSION}.tar.gz >
     else export CMAKE_PARAMS=""; \
     fi \
   && cmake -DCMAKE_BUILD_TYPE=Release \
-           -DMPPP_WITH_FMT=yes \
            -DMPPP_WITH_MPFR=yes \
            -DCMAKE_CXX_STANDARD=17 \
            -DMPPP_WITH_BOOST_S11N=ON \
@@ -203,7 +197,7 @@ RUN curl -L  https://github.com/stevengj/nlopt/archive/v${NLOPT_VERSION}.tar.gz 
   && cd nlopt-${NLOPT_VERSION} \
   && mkdir build \
   && cd build \
-  && cmake -DNLOPT_GUILE=OFF -DNLOPT_MATLAB=OFF -DNLOPT_OCTAVE=OFF ../ > /dev/null \
+  && cmake -DNLOPT_GUILE=OFF -DNLOPT_MATLAB=OFF -DNLOPT_OCTAVE=OFF -DNLOPT_PYTHON=OFF -DNLOPT_JAVA=OFF -DNLOPT_SWIG=OFF ../ > /dev/null \
   && make -j4 \
   # > /dev/null \
   && make install > /dev/null
@@ -236,7 +230,7 @@ RUN curl -L https://github.com/shibatch/sleef/archive/${SLEEF_VERSION}.tar.gz  >
 
 # Install pybind11 
 WORKDIR /root/install
-ARG PYBIND11_VERSION="3.0.4"
+ARG PYBIND11_VERSION="3.1.0"
 RUN curl -L https://github.com/pybind/pybind11/archive/v${PYBIND11_VERSION}.tar.gz  > pybind11-${PYBIND11_VERSION}.tar.gz \
   && tar xvf pybind11-${PYBIND11_VERSION}.tar.gz > /dev/null 2>&1 \
   && cd pybind11-${PYBIND11_VERSION} \
